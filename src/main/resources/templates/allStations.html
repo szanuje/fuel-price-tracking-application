@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Framework Guru</title>
+</head>
+<body>
+<h1>Stacje</h1>
+
+<table>
+    <tr>
+        <th>Nazwa</th>
+        <th>Ulica</th>
+        <th>kod_pocztowy</th>
+    </tr>
+    <tr th:each="station : ${stations}">
+        <td th:text="${station.name}"></td>
+        <td th:text="${station.street}"></td>
+        <td th:text="${station.postalCode}"></td>
+    </tr>
+</table>
+
+</body>
+</html>
