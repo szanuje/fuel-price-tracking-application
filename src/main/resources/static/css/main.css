@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Pacifico&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', 'sans-serif';
+}
+
+header {
+    padding: 0;
+    margin: 0;
+    background-color: #0099cc;
+    display: flex;
+    height: 120px;
+    align-items: center;
+
+}
+
+button:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.logo {
+    margin-left: 100px;
+    display: flex;
+}
+
+.logo img {
+    width: 70px;
+    height: 70px;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    animation: move 2s infinite alternate;
+}
+
+@keyframes move {
+    0% {
+        transform: translateY(0px);
+    }
+    100% {
+        transform: translateY(-6px);
+    }
+}
+
+.logo p {
+    font-family: 'Pacifico', 'cursive';
+    font-size: 55px;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    color: whitesmoke;
+}
+
+.logo p:hover {
+    color: black;
+}
+
+.navigation {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1150px;
+    margin: 0;
+    padding: 0;
+}
+
+.navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+    float: right;
+    display: flex;
+}
+
+.navigation ul li {
+    display: inline-block;
+    padding: 3em;
+}
+
+.navigation ul li a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navigation ul li a:hover {
+    color: rgba(49, 49, 49, 0.767);
+}
+
+.site {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+.box {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    background-color: rgb(231, 231, 231);
+
+    text-align: center;
+    height: 250px;
+}
+
+.box p {
+    padding-top: 30px;
+    padding-bottom: 1em;
+    margin: 0 auto;
+    width: 90%;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.box input {
+    width: 90%;
+    height: 30px;
+    padding: 5px;
+    border: none;
+}
+
+.box button {
+    margin-top: 5px;
+    height: 30px;
+    width: 92%;
+    padding: 5px;
+    background-color: #0099cc;
+    border: none
+}
+
+.login {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: -120px 0 0 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    text-align: center;
+    background-color: rgba(128, 128, 128, 0.952);
+    display: none;
+
+}
+
+.loginform {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    background-color: rgb(231, 231, 231);
+
+    text-align: center;
+    height: 250px;
+    width: 400px;
+
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 20px;
+    background-color: rgb(255, 255, 255);
+
+    padding-left: 10px;
+}
+
+.loginform label {
+    display: flex;
+    width: 97%;
+    margin-top: 20px;
+}
+
+.loginform input {
+    display: flex;
+    width: 97%;
+    padding: 5px 0;
+    margin: 5px 0;
+    border: none;
+    border-bottom: 0.5px solid black;
+}
+
+.loginform button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 97%;
+    text-align: center;
+    align-content: center;
+    background-color: #0099cc;
+    border: none;
+    padding: 5px;
+}
+
+.animate {
+    -webkit-animation: animatezoom 0.5s;
+    animation: animatezoom 0.5s;
+}
+
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0);}
+    to {-webkit-transform: scale(1);}
+}
+
+@keyframes animatezoom {
+    from {transform: scale(0);}
+    from {transform: scale(1);}
+}
+
+.all-stations {
+    margin: 0  auto;
+    padding: 0;
+    text-align: center;
+}
+
+.all-stations table {
+    margin: 0 auto;
+}
+
+.all-stations table tr td {
+    padding: 10px 20px;
+}

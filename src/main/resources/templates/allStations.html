@@ -1,24 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Spring Framework Guru</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <script src="../static/js/main.js"></script>
+    <title>Fuel App</title>
 </head>
 <body>
-<h1>Stacje</h1>
+<div class="container">
+    <header>
+        <div class="logo">
+            <a href="http://localhost:8080/home" id="menuhome2"><img th:src="@{/images/gas-station-icon.png}" alt="gas-station-icon" class="gas-station-icon"></a>
+            <a href="http://localhost:8080/home" id="menuhome"><p>Fuels</p></a>
+        </div>
+        <nav class="navigation">
+            <ul>
+                <li><a href="#" id="menulogin">Login</a></li>
+                <li><a href="#" id="menuregister">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="all-stations">
+        <h1>Stations</h1>
 
-<table>
-    <tr>
-        <th>Nazwa</th>
-        <th>Ulica</th>
-        <th>kod_pocztowy</th>
-    </tr>
-    <tr th:each="station : ${stations}">
-        <td th:text="${station.name}"></td>
-        <td th:text="${station.street}"></td>
-        <td th:text="${station.postalCode}"></td>
-    </tr>
-</table>
-
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Street</th>
+                <th>Postal Code</th>
+            </tr>
+            <tr th:each="station : ${stations}">
+                <td th:text="${station.name}"></td>
+                <td th:text="${station.street}"></td>
+                <td th:text="${station.postalCode}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
 </body>
-</html>
