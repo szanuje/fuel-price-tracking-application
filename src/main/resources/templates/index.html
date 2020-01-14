@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,22 +13,25 @@
 <body>
 <div class="container">
     <header>
-        <div class="logo">
-            <a href="http://localhost:8080/home" id="menuhome2"><img th:src="@{/images/gas-station-icon.png}"
-                                                                     alt="gas-station-icon"
-                                                                     class="gas-station-icon"></a>
-            <a href="http://localhost:8080/home" id="menuhome"><p>Fuels</p></a>
+        <div class="content">
+            <div class="logo">
+                <a th:href="@{/}" id="menuhome2"><img th:src="@{/images/gas-station-icon.png}"
+                                                      alt="gas-station-icon" class="gas-station-icon"></a>
+                <a th:href="@{/}" id="menuhome"><p>Fuels</p></a>
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li sec:authorize="isAnonymous()"><a th:href="@{/login}" id="menulogin">Login</a></li>
+                    <li sec:authorize="isAnonymous()"><a th:href="@{/test}" id="menuregister">Register</a></li>
+                    <li sec:authorize="isAuthenticated()"><a th:href="@{/test}" id="menuuser"
+                                                             th:text="${#authentication.name}"></a></li>
+                    <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" id="menulogout">Logout</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav class="navigation">
-            <ul>
-                <li><a href="#" id="menulogin">Login</a></li>
-                <li><a href="#" id="menuregister">Register</a></li>
-            </ul>
-        </nav>
     </header>
 
     <div class="site">
-
         <div class="box" id="box">
             <p>Best fuel price tracing app in the internet</p>
             <form class="finder" action="http://localhost:8080/stations/all" method="GET" id="finder">
@@ -35,16 +39,6 @@
                 <button class="searchbutton" id="searchbutton">Search</button>
             </form>
         </div>
-        <div class="login" id="login">
-            <form class="loginform animate" action="http://localhost:8080/test" method="GET" id="loginform">
-                <label for="user">Username</label>
-                <input type="text" placeholder="Enter Username" name="name" id="user" required>
-                <label for="pass">Password</label>
-                <input type="text" placeholder="Enter Password" name="name" id="pass" required>
-                <button class="loginbutton" id="loginbutton">Login</button>
-            </form>
-        </div>
-
     </div>
 </div>
 </body>

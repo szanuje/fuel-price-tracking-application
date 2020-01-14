@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" th:href="@{/css/main.css}">
-    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/login.js}"></script>
     <title>Fuel App</title>
 </head>
 <body>
@@ -19,19 +19,26 @@
                                                       alt="gas-station-icon" class="gas-station-icon"></a>
                 <a th:href="@{/}" id="menuhome"><p>Fuels</p></a>
             </div>
-            <nav class="navigation">
+            <nav sec:authorize="isAnonymous()" class="navigation">
                 <ul>
-                    <li sec:authorize="isAnonymous()"><a th:href="@{/login}" id="menulogin">Login</a></li>
-                    <li sec:authorize="isAnonymous()"><a th:href="@{/test}" id="menuregister">Register</a></li>
-                    <li sec:authorize="isAuthenticated()"><a th:href="@{/test}" id="menuuser"
-                                                             th:text="${#authentication.name}"></a></li>
-                    <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" id="menulogout">Logout</a></li>
+                    <li><a th:href="@{/login}" id="menulogin">Login</a></li>
+                    <li><a th:href="@{/test}" id="menuregister">Register</a></li>
                 </ul>
             </nav>
         </div>
     </header>
-    <div>
-        REDIRECTED
+    <div class="site">
+        <div class="login" id="login">
+            <form class="loginform animate" th:action="@{/login}" method="POST" id="loginform">
+                <p>Please sign in</p>
+                <label for="username">Username</label>
+                <input type="text" placeholder="Enter Username" name="username" id="username" required>
+                <label for="password">Password</label>
+                <input type="password" placeholder="Enter Password" name="password" id="password" required>
+                <button class="loginbutton" type="submit" id="loginbutton">Login</button>
+            </form>
+        </div>
+
     </div>
 </div>
 </body>
