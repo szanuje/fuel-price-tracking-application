@@ -6,9 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-    <link rel="stylesheet" th:href="@{/css/login_register.css}">
-    <script th:src="@{/js/login.js}"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/login_register.css">
     <title>Fuel App</title>
 </head>
 <body>
@@ -27,16 +26,22 @@
                 </ul>
             </nav>
         </div>
+
     </header>
     <div class="site">
         <div class="blur" id="blur">
-            <form class="rl loginform animate" th:action="@{/login}" method="POST" id="loginform">
-                <p>Please sign in</p>
+            <form class="rl registerform animate" action="#" th:action="@{/register}" th:object="${user}" method="POST" id="registerform">
                 <label for="username">Username</label>
-                <input type="text" placeholder="Enter Username" name="username" id="username" required>
+                <input th:field="*{username}" type="text" placeholder="Enter Username" name="username" id="username" required>
+                <label for="email">Email</label>
+                <input th:field="*{email}" type="text" placeholder="Enter Email" name="email" id="email" required>
+                <label for="name">First Name</label>
+                <input th:field="*{name}" type="text" placeholder="Enter First Name" name="name" id="name" required>
+                <label for="surname">Last Name</label>
+                <input th:field="*{surname}" type="text" placeholder="Enter Last Name" name="surname" id="surname" required>
                 <label for="password">Password</label>
-                <input type="password" placeholder="Enter Password" name="password" id="password" required>
-                <button class="loginbutton" type="submit" id="loginbutton">Login</button>
+                <input th:field="*{password}" type="password" placeholder="Enter Password" name="password" id="password" required>
+                <button class="registerbutton" type="submit" id="registerbutton">Register</button>
             </form>
         </div>
 

@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class MainPageController {
 
-    @GetMapping("")
-    public String homepage() {
+    @GetMapping
+    public String homePageGet() {
+        return "index";
+    }
+
+    @PostMapping
+    public String homePagePost() {
         return "index";
     }
 
@@ -23,7 +28,7 @@ public class MainPageController {
     }
 
     @GetMapping("/test")
-    public String testPage() {
+    public String testPageGet() {
         return "test";
     }
 }

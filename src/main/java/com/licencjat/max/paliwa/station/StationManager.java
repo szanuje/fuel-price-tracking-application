@@ -34,10 +34,15 @@ public class StationManager {
         return stationRepository.save(s);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void initStations() {
-        save(new Station(1L, "Orlen", "Kapelanka 2", 30316, new BigDecimal("31.23232"), new BigDecimal("22.32312312")));
-        save(new Station(2L, "BP", "Ulica 2", 30316, new BigDecimal("31.23232"), new BigDecimal("22.32312312")));
-        save(new Station(3L, "Lotos", "Ulica 3", 30316, new BigDecimal("31.23232"), new BigDecimal("22.32312312")));
+    public void deleteAll() {
+        stationRepository.deleteAll();
     }
+
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void initStations() {
+//        stationRepository.deleteAll();
+//        save(new Station(1L, "Orlen", "Kapelanka 2", 30316, new BigDecimal("31.23232"), new BigDecimal("22.32312312")));
+//        save(new Station(2L, "BP", "Ulica 2", 30316, new BigDecimal("31.23232"), new BigDecimal("22.32312312")));
+//        save(new Station(3L, "Lotos", "Ulica 3", 30316, new BigDecimal("31.23232"), new BigDecimal("22.32312312")));
+//    }
 }

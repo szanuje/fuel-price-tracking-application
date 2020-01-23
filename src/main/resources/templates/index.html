@@ -22,7 +22,7 @@
             <nav class="navigation">
                 <ul>
                     <li sec:authorize="isAnonymous()"><a th:href="@{/login}" id="menulogin">Login</a></li>
-                    <li sec:authorize="isAnonymous()"><a th:href="@{/test}" id="menuregister">Register</a></li>
+                    <li sec:authorize="isAnonymous()"><a th:href="@{/register}" id="menuregister">Register</a></li>
                     <li sec:authorize="isAuthenticated()"><a th:href="@{/test}" id="menuuser"
                                                              th:text="${#authentication.name}"></a></li>
                     <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" id="menulogout">Logout</a></li>
