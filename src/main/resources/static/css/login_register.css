@@ -20,13 +20,11 @@
     -moz-transform: translateX(-50%) translateY(-50%);
     -webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
-    background-color: rgb(231, 231, 231);
 
     text-align: center;
     height: 250px;
     width: 400px;
 
-    text-align: center;
     margin: 0 auto;
     padding: 10px;
     background-color: rgb(255, 255, 255);
@@ -40,17 +38,22 @@
     -moz-transform: translateX(-50%) translateY(-50%);
     -webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
-    background-color: rgb(231, 231, 231);
 
     text-align: center;
-    height: 450px;
+    height: 520px;
     width: 400px;
 
-    text-align: center;
     margin: 0 auto;
     padding: 10px;
     background-color: rgb(255, 255, 255);
 
+}
+
+.password-warning {
+    margin: 0 0 0 10px;
+    font-size: 10px;
+    display: none;
+    color: red;
 }
 
 .rl label {
@@ -91,11 +94,19 @@
 }
 
 @-webkit-keyframes animatezoom {
-    from {-webkit-transform: scale(0);}
-    to {-webkit-transform: scale(1);}
+    from {
+        -webkit-transform: scale(0);
+    }
+    to {
+        -webkit-transform: scale(1);
+    }
 }
 
 @keyframes animatezoom {
-    from {transform: scale(0);}
-    from {transform: scale(1);}
+    from {
+        transform: scale(0);
+    }
+    from {
+        transform: scale(1);
+    }
 }

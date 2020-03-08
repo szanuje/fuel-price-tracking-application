@@ -1,19 +1,21 @@
 package com.licencjat.max.paliwa.security.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserManager {
 
+    private static final Logger log = LoggerFactory.getLogger(UserRegisterController.class);
     private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserManager(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserManager(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public User findByUsername(String username) {
@@ -24,20 +26,17 @@ public class UserManager {
         return userRepository.findAll();
     }
 
+    public void saveAll(List<User> users) {
+        userRepository.saveAll(users);
+    }
+
     public void deleteAll() {
         userRepository.deleteAll();
     }
 
-    public User save(User u) {
-        return userRepository.save(u);
+    public void save(User u) {
+        userRepository.save(u);
+        log.info("Saved user: " + u.toString());
     }
 
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void initUsers() {
-//        userRepository.deleteAll();
-//        save(new User(1L, "user", "user_email", passwordEncoder.encode("pass"),
-//                "Name", "Surname", "USER", "xd"));
-//        save(new User(1L, "admin", "user_email", passwordEncoder.encode("admin"),
-//                "Name", "Surname", "ADMIN", "xd"));
-//    }
 }

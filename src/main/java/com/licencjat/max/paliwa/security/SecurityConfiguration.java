@@ -1,5 +1,6 @@
 package com.licencjat.max.paliwa.security;
 
+import com.licencjat.max.paliwa.security.user.Permissions;
 import com.licencjat.max.paliwa.security.user.UserPrincipalDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -76,7 +77,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin()
                 .loginPage("/login")
-
 //                .successForwardUrl("/test")
 //                .defaultSuccessUrl("/test")
                 .permitAll()
@@ -86,9 +86,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/test", "/console/**", "/login", "/register").permitAll()
-                .antMatchers("/stations/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/users/all").hasRole("ADMIN")
+                .antMatchers("/", "/login", "/register").permitAll()
+                .antMatchers(Permissions.getUserRoleMatchers().split(",")).hasAnyAuthority(Permissions.getUserRoleAuthorities().split(","))
+                .antMatchers(Permissions.getAdminRoleMatchers().split(",")).hasAnyAuthority(Permissions.getAdminRoleAuthorities().split(","))
                 .anyRequest().authenticated();
     }
 }

@@ -20,7 +20,7 @@ public class StationController {
     public String getAllStations(Model model) {
         Iterable<Station> stations = stationManager.findAll();
         model.addAttribute("stations", stations);
-        return "allStations";
+        return "stations";
     }
 
     @GetMapping("/{id}")
