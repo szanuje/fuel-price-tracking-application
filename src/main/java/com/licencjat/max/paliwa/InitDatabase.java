@@ -4,7 +4,7 @@ import com.licencjat.max.paliwa.price.Price;
 import com.licencjat.max.paliwa.price.PriceManager;
 import com.licencjat.max.paliwa.reports.Report;
 import com.licencjat.max.paliwa.reports.ReportManager;
-import com.licencjat.max.paliwa.security.user.Permissions;
+import com.licencjat.max.paliwa.security.AuthenticationConstants;
 import com.licencjat.max.paliwa.security.user.User;
 import com.licencjat.max.paliwa.security.user.UserManager;
 import com.licencjat.max.paliwa.station.Station;
@@ -50,11 +50,11 @@ public class InitDatabase implements CommandLineRunner {
         userManager.deleteAll();
         reportManager.deleteAll();
 
-        Station station1 = setStation("Orlen", "Kapelanka 2", 30316,
+        Station station1 = setStation("Orlen", "Kapelanka 2", 30316, "Kraków",
                 new BigDecimal("31.23232"), new BigDecimal("22.32312312"));
-        Station station2 = setStation("BP", "Ulica 2", 30316,
+        Station station2 = setStation("BP", "Ulica 2", 30316, "Kraków",
                 new BigDecimal("31.23232"), new BigDecimal("22.32312312"));
-        Station station3 = setStation("Lotos", "Ulica 3", 30316,
+        Station station3 = setStation("Lotos", "Ulica 3", 30316, "Kraków",
                 new BigDecimal("31.23232"), new BigDecimal("22.32312312"));
 
         stationManager.saveAll(Arrays.asList(station1, station2, station3));
@@ -69,9 +69,9 @@ public class InitDatabase implements CommandLineRunner {
         priceManager.saveAll(Arrays.asList(price1, price2, price3));
 
         User user1 = setUser("admin", "admin@email.com", passwordEncoder.encode("admin"),
-                "Name", "Surname", "ADMIN", Permissions.getUserRoleAuthorities());
+                "Name", "Surname", "ADMIN", AuthenticationConstants.adminRoleAuthoritiesAsString());
         User user2 = setUser("user", "user@email.com", passwordEncoder.encode("user"),
-                "Name", "Surname", "USER", Permissions.getUserRoleAuthorities());
+                "Name", "Surname", "USER", AuthenticationConstants.userRoleAuthoritiesAsString());
 
         userManager.saveAll(Arrays.asList(user1, user2));
 
@@ -80,11 +80,12 @@ public class InitDatabase implements CommandLineRunner {
         reportManager.saveAll(Arrays.asList(report1));
     }
 
-    private Station setStation(String name, String street, int postalCode, BigDecimal lon, BigDecimal lat) {
+    private Station setStation(String name, String street, int postalCode, String city, BigDecimal lon, BigDecimal lat) {
         Station station = new Station();
         station.setName(name);
         station.setStreet(street);
         station.setPostalCode(postalCode);
+        station.setCity(city);
         station.setLon(lon);
         station.setLat(lat);
         return station;
@@ -109,7 +110,7 @@ public class InitDatabase implements CommandLineRunner {
         user.setName(name);
         user.setSurname(surname);
         user.setRoles(roles);
-        user.setPermissions(permissions);
+        user.setAuthorities(permissions);
         return user;
     }
 

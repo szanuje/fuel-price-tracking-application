@@ -1,6 +1,5 @@
 package com.licencjat.max.paliwa.security;
 
-import com.licencjat.max.paliwa.security.user.Permissions;
 import com.licencjat.max.paliwa.security.user.UserPrincipalDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -23,16 +24,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.userPrincipalDetailsService = userPrincipalDetailsService;
     }
 
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    UserDetailsService userDetailsService() {
-//        return new UserPrincipalDetailsService();
-//    }
 
     @Bean
     DaoAuthenticationProvider authenticationProvider() {
@@ -42,22 +37,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return daoAuthenticationProvider;
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user = User.withDefaultPasswordEncoder()
-//                .username("user")
-//                .password("pass")
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails admin = User.withDefaultPasswordEncoder()
-//                .username("admin")
-//                .password("admin")
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user, admin);
-//    }
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
+        handler.setUseReferer(true);
+        return handler;
+    }
+
+    @Bean
+    public LoginFailureHandler loginFailureHandler() {
+        return new LoginFailureHandler();
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
@@ -65,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/js/**", "/css/**", "/images/**", "/**/favicon.ico");
     }
 
@@ -76,19 +66,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .formLogin()
-                .loginPage("/login")
-//                .successForwardUrl("/test")
-//                .defaultSuccessUrl("/test")
+                .loginPage(AuthenticationConstants.LOGIN_POST_URL_ENDPOINT)
+                .defaultSuccessUrl(AuthenticationConstants.DEFAULT_SUCCESS_URL_ENDPOINT, true)
+                .failureHandler(loginFailureHandler())
                 .permitAll()
                 .and()
                 .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
+                .logoutUrl(AuthenticationConstants.LOGOUT_URL_ENDPOINT)
+                .logoutSuccessUrl(AuthenticationConstants.LOGOUT_SUCCESS_URL_ENDPOINT)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/register").permitAll()
-                .antMatchers(Permissions.getUserRoleMatchers().split(",")).hasAnyAuthority(Permissions.getUserRoleAuthorities().split(","))
-                .antMatchers(Permissions.getAdminRoleMatchers().split(",")).hasAnyAuthority(Permissions.getAdminRoleAuthorities().split(","))
+                .antMatchers(AuthenticationConstants.guestMatchers()).permitAll()
+                .antMatchers(AuthenticationConstants.userRoleMatchers()).hasAnyAuthority(AuthenticationConstants.userRoleAuthorities())
+                .antMatchers(AuthenticationConstants.adminRoleMatchers()).hasAnyAuthority(AuthenticationConstants.adminRoleAuthorities())
                 .anyRequest().authenticated();
     }
 }

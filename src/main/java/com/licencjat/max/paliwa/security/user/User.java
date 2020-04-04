@@ -27,7 +27,7 @@ public class User {
     private String name;
     private String surname;
     private String roles = "";
-    private String permissions = "";
+    private String authorities = "";
 
     public List<String> getRolesList() {
         if (roles.length() > 0) {
@@ -36,9 +36,9 @@ public class User {
         return new ArrayList<>();
     }
 
-    public List<String> getPermissionsList() {
-        if (permissions.length() > 0) {
-            return Arrays.asList(permissions.split(","));
+    public List<String> getAuthoritiesList() {
+        if (authorities.length() > 0) {
+            return Arrays.asList(authorities.split(","));
         }
         return new ArrayList<>();
     }

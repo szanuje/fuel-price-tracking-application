@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" th:href="@{/css/main.css}">
-    <script th:src="@{/js/main.js}"></script>
     <title>Fuel App</title>
 </head>
 <body>
-<div class="container">
-    <header>
-        <div class="content">
-            <div class="logo">
-                <a th:href="@{/}" id="menuhome2"><img th:src="@{/images/gas-station-icon.png}"
-                                                      alt="gas-station-icon" class="gas-station-icon"></a>
-                <a th:href="@{/}" id="menuhome"><p>Fuels</p></a>
-            </div>
-            <nav class="navigation">
-                <ul>
-                    <li sec:authorize="isAnonymous()"><a th:href="@{/login}" id="menulogin">Login</a></li>
-                    <li sec:authorize="isAnonymous()"><a th:href="@{/register}" id="menuregister">Register</a></li>
-                    <li sec:authorize="isAuthenticated()"><a th:href="@{/test}" id="menuuser"
-                                                             th:text="${#authentication.name}"></a></li>
-                    <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" id="menulogout">Logout</a></li>
-                </ul>
-            </nav>
+<header>
+    <div class="menu-bar" id="menu-bar">
+        <div class="logo">
+            <a th:href="@{/}" id="menuhome2"><img th:src="@{/images/gas-station-icon.png}"
+                                                  alt="gas-station-icon" class="gas-station-icon"></a>
+            <a th:href="@{/}" id="menuhome"><p>Fuels</p></a>
         </div>
-    </header>
-    <div>
-        REDIRECTED
+        <nav class="navigation">
+            <ul>
+                <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="navigation-text" th:href="@{/console}"
+                                                             id="menuconsole">Console</a></li>
+                <li sec:authorize="isAnonymous()"><span class="navigation-text" th:href="@{/}" id="menuregister">Register</span>
+                </li>
+                <li sec:authorize="isAnonymous()"><span class="navigation-text" id="menulogin">Login</span></li>
+                <li sec:authorize="isAuthenticated()"><a class="navigation-text" th:href="@{/test}"
+                                                         id="menuaddstation">Add Station</a></li>
+                <li sec:authorize="isAuthenticated()"><a class="navigation-text" th:href="@{/test}" id="menuuser"
+                                                         th:text="${#authentication.name}"></a></li>
+                <li sec:authorize="isAuthenticated()"><a class="navigation-text" th:href="@{/logout}"
+                                                         id="menulogout">Logout</a></li>
+            </ul>
+        </nav>
     </div>
+</header>
+<div class="site" id="site">
+    REDIRECT
 </div>
+
 </body>

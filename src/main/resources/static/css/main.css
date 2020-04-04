@@ -1,27 +1,23 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Pacifico&display=swap');
 
+/* main rules */
+
+html {
+    height: 100%;
+}
+
 body {
     margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
     font-family: 'Montserrat', 'sans-serif';
 }
 
-header {
-    padding: 0;
-    margin: 0;
+button {
     background-color: #0099cc;
-    display: flex;
-    height: 120px;
-    align-items: center;
-
-}
-
-.content {
-    margin: 0;
-    padding: 0 100px;
-    width: 100%;
-    height: 100%;
-    display: flex;
+    border: none;
 }
 
 button:hover {
@@ -29,19 +25,151 @@ button:hover {
     cursor: pointer;
 }
 
-.logo {
-    display: flex;
-    padding-top: 10px;
+input {
+    border: none;
+    border-bottom: 0.5px solid black;
 }
 
-.logo img {
-    width: 70px;
-    height: 70px;
-    margin: 0;
-    padding-top: 2px;
+.blur {
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -o-filter: blur(10px);
+    -ms-filter: blur(10px);
+    filter: blur(10px)
+}
+
+.no-pointer {
+    pointer-events: none;
+}
+
+.show {
+    display: block;
+    z-index: 1;
+}
+
+.hide {
+    display: none;
+    z-index: -1;
+}
+
+/* login and register css */
+
+#blur-me {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+}
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    background-color: rgb(231, 231, 231);
+    border-radius: 1%;
+    padding: 10px;
+    z-index: 2;
+    text-align: -webkit-center;
+}
+
+.register {
+    height: 500px;
+    width: 400px;
+}
+
+.login {
+    height: 250px;
+    width: 400px;
+}
+
+.modal > form {
+    text-align: center;
+    width: 300px;
+}
+
+.modal > form > * {
+    width: 100%;
+    text-align: center;
+}
+
+.modal > form > input {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    height: 25px;
+}
+
+.warning {
+    font-size: 10px;
+    display: none;
+    color: red;
+}
+
+#loginbutton, #registerbutton {
+    height: 28px;
+}
+
+.animate {
+    -webkit-animation: animatezoom 0.5s;
+    animation: animatezoom 0.5s;
+}
+
+@-webkit-keyframes animatezoom {
+    from {
+        -webkit-transform: scale(0);
+    }
+    to {
+        -webkit-transform: scale(1);
+    }
+}
+
+@keyframes animatezoom {
+    from {
+        transform: scale(0);
+    }
+    from {
+        transform: scale(1);
+    }
+}
+
+/* header section and navigation */
+
+header {
+    position: sticky;
+    background-color: #0099cc;
     display: inline-block;
-    vertical-align: middle;
+    height: 120px;
+    width: 100%;
+    overflow: auto;
+
+}
+
+.menu-bar {
+    height: 100%;
+    padding: 0 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.logo {
+    height: 100%;
+    min-width: 200px;
+}
+
+.gas-station-icon {
+    width: 70px;
     animation: move 2s infinite alternate;
+    display: inline-block;
+}
+
+#menuhome {
+    padding-top: 20px;
+    display: inline-block;
+    text-decoration: none;
 }
 
 @keyframes move {
@@ -57,9 +185,9 @@ button:hover {
     font-family: 'Pacifico', 'cursive';
     font-size: 55px;
     margin: 0;
-    display: inline-block;
     vertical-align: middle;
     color: whitesmoke;
+    text-decoration: none;
 }
 
 .logo p:hover {
@@ -67,33 +195,33 @@ button:hover {
 }
 
 .navigation {
-    padding: 0;
-    margin: auto 0;
-    width: 100%;
     text-align: right;
 }
 
 .navigation ul {
     list-style: none;
-    padding: 0;
+
 }
 
 .navigation ul li {
     display: inline-block;
-    padding: 0;
     text-decoration: underline;
 }
 
-.navigation ul li a {
+.navigation-text {
+    text-decoration: underline;
     color: white;
     font-size: 18px;
     font-weight: bold;
     padding: 0 35px
 }
 
-.navigation ul li a:hover {
+.navigation-text:hover {
     color: rgba(49, 49, 49, 0.767);
+    cursor: pointer;
 }
+
+/* page section */
 
 .site {
     position: fixed;
@@ -104,7 +232,7 @@ button:hover {
     background-color: white;
 }
 
-.box {
+.search-stations {
     position: absolute;
     top: 215px;
     left: 50%;
@@ -117,7 +245,7 @@ button:hover {
     height: 250px;
 }
 
-.box p {
+.search-stations p {
     padding-top: 30px;
     padding-bottom: 1em;
     margin: 0 auto;
@@ -126,14 +254,14 @@ button:hover {
     font-weight: bold;
 }
 
-.box input {
+.search-stations input {
     width: 90%;
     height: 30px;
     padding: 5px;
     border: none;
 }
 
-.box button {
+.search-stations button {
     margin-top: 5px;
     height: 30px;
     width: 92%;
@@ -153,19 +281,5 @@ button:hover {
 }
 
 .all-stations table tr td {
-    padding: 10px 20px;
-}
-
-.prices {
-    margin: 0 auto;
-    padding: 0;
-    text-align: center;
-}
-
-.prices table {
-    margin: 0 auto;
-}
-
-.prices table tr td {
     padding: 10px 20px;
 }
