@@ -7,6 +7,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/maps.css}"/>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+    <link
+            rel="stylesheet"
+            href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css"
+            type="text/css"
+    />
+    <link
+            rel="stylesheet"
+            href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
+            type="text/css"
+    />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/v4-shims.css">
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
+    <script src='https://npmcdn.com/mapbox-gl-circle/dist/mapbox-gl-circle.min.js'></script>
+    <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script th:src="@{/js/main.js}"></script>
@@ -29,7 +52,7 @@
                     <li sec:authorize="isAnonymous()"><span class="navigation-text" th:href="@{/}" id="menuregister">Register</span>
                     </li>
                     <li sec:authorize="isAnonymous()"><span class="navigation-text" id="menulogin">Login</span></li>
-                    <li sec:authorize="isAuthenticated()"><a class="navigation-text" th:href="@{/test}"
+                    <li sec:authorize="isAuthenticated()"><a class="navigation-text" th:href="@{/stations/add}"
                                                              id="menuaddstation">Add Station</a></li>
                     <li sec:authorize="isAuthenticated()"><a class="navigation-text" th:href="@{/test}" id="menuuser"
                                                              th:text="${#authentication.name}"></a></li>
@@ -40,14 +63,9 @@
         </div>
     </header>
     <div class="site" id="site">
-        <div class="search-stations" id="search-stations">
-            <p>Best fuel price tracing app in the internet</p>
-            <form class="finder" th:action="@{/stations/all}" method="GET" id="finder">
-                <input type="text" placeholder="Choose your location" name="location" id="location" required>
-                <button class="searchbutton" id="searchbutton">Search</button>
-            </form>
-        </div>
-
+        <div id="main-map"></div>
+        <div id="instructions" class="hide"></div>
+        <div id="circle"></div>
     </div>
 
 </div>
@@ -55,7 +73,8 @@
 <div class="modal login animate hide" id="login-modal">
     <form class="loginform" th:action="@{/login}" method="POST" id="loginform">
         <h2>Please sign in</h2>
-        <label for="username">Username<span class="warning" id="wrong-username-warning" >wrong username or password</span></label>
+        <label for="username">Username<span class="warning"
+                                            id="wrong-username-warning">wrong username or password</span></label>
         <input type="text" placeholder="Enter Username" name="username" id="username" required>
         <label for="password">Password</label>
         <input type="password" placeholder="Enter Password" name="password" id="password" required>

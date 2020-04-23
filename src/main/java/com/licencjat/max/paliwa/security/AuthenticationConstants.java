@@ -19,6 +19,7 @@ public class AuthenticationConstants {
     static final String LOGOUT_URL_ENDPOINT = "/logout";
     static final String LOGOUT_SUCCESS_URL_ENDPOINT = "/";
 
+    static final String GET_MARKERS_ENDPOINT = "/get-markers";
     static final String TEST_URL_ENDPOINTS = "/test";
     static final String STATIONS_URL_ENDPOINTS = "/stations/**";
     static final String PRICES_URL_ENDPOINTS = "/prices/**";
@@ -56,7 +57,8 @@ public class AuthenticationConstants {
                 REGISTER_POST_URL_ENDPOINT,
                 ERROR_PAGE_ENDPOINT,
                 TEST_URL_ENDPOINTS,
-                CONSOLE_URL_ENDPOINTS
+                CONSOLE_URL_ENDPOINTS,
+                GET_MARKERS_ENDPOINT
         ).toArray(String[]::new);
     }
 

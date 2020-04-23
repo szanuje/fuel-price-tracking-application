@@ -7,6 +7,11 @@ html {
     height: 100%;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -85,17 +90,20 @@ input {
     width: 400px;
 }
 
-.modal > form {
-    text-align: center;
+.loginform, .registerform {
     width: 300px;
 }
 
-.modal > form > * {
+form {
+    text-align: center;
+}
+
+form > * {
     width: 100%;
     text-align: center;
 }
 
-.modal > form > input {
+form > input {
     margin-top: 5px;
     margin-bottom: 10px;
     height: 25px;
@@ -139,7 +147,7 @@ input {
 header {
     position: sticky;
     background-color: #0099cc;
-    display: inline-block;
+    display: block;
     height: 120px;
     width: 100%;
     overflow: auto;
@@ -205,15 +213,18 @@ header {
 
 .navigation ul li {
     display: inline-block;
-    text-decoration: underline;
+    box-shadow: 2px 2px 2px 2px #0068808f;
+    background-color: #00688024;
+    height: 30px;
 }
 
 .navigation-text {
-    text-decoration: underline;
+    vertical-align: -webkit-baseline-middle;
     color: white;
     font-size: 18px;
     font-weight: bold;
-    padding: 0 35px
+    padding: 0 35px;
+    text-decoration: none;
 }
 
 .navigation-text:hover {
@@ -225,61 +236,9 @@ header {
 
 .site {
     position: fixed;
-    height: 100%;
+    height: calc(100% - 120px);
     width: 100%;
     margin: 0;
     padding: 0;
     background-color: white;
-}
-
-.search-stations {
-    position: absolute;
-    top: 215px;
-    left: 50%;
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
-    background-color: rgb(231, 231, 231);
-
-    text-align: center;
-    height: 250px;
-}
-
-.search-stations p {
-    padding-top: 30px;
-    padding-bottom: 1em;
-    margin: 0 auto;
-    width: 90%;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.search-stations input {
-    width: 90%;
-    height: 30px;
-    padding: 5px;
-    border: none;
-}
-
-.search-stations button {
-    margin-top: 5px;
-    height: 30px;
-    width: 92%;
-    padding: 5px;
-    background-color: #0099cc;
-    border: none
-}
-
-.all-stations {
-    margin: 0 auto;
-    padding: 0;
-    text-align: center;
-}
-
-.all-stations table {
-    margin: 0 auto;
-}
-
-.all-stations table tr td {
-    padding: 10px 20px;
 }

@@ -50,23 +50,53 @@ public class InitDatabase implements CommandLineRunner {
         userManager.deleteAll();
         reportManager.deleteAll();
 
-        Station station1 = setStation("Orlen", "Kapelanka 2", 30316, "Kraków",
-                new BigDecimal("31.23232"), new BigDecimal("22.32312312"));
-        Station station2 = setStation("BP", "Ulica 2", 30316, "Kraków",
-                new BigDecimal("31.23232"), new BigDecimal("22.32312312"));
-        Station station3 = setStation("Lotos", "Ulica 3", 30316, "Kraków",
-                new BigDecimal("31.23232"), new BigDecimal("22.32312312"));
+        Station station1 = setStation("BP Kapelanka", "Kapelanka 2", "30-309", "Kraków", "no description",
+                new BigDecimal("50.04424240166993"), new BigDecimal("19.921731948852543"));
+        Station station2 = setStation("watkem", "Rudna Mała 869", "35-900", "Rudna Mała","no description",
+                new BigDecimal("50.1157788"), new BigDecimal("21.980679"));
+        Station station3 = setStation("Lotos Optima", "Kapelanka undefined", "30-347", "Kraków","no description",
+                new BigDecimal("50.0401092"), new BigDecimal("19.9242978306511"));
+        Station station4 = setStation("Stacja paliw Krak-Tar", "Kapelanka 30", "30-001", "Kraków", "no description",
+                new BigDecimal("50.038179"), new BigDecimal("19.925203"));
+        Station station5 = setStation("Stacja Paliw Tesco", "Kapelanka 56", "30-347", "Kraków", "no description",
+                new BigDecimal("50.033927"), new BigDecimal("19.924538"));
+        Station station6 = setStation("Shell", "Marii Konopnickiej 78", "30-333", "Kraków", "no description",
+                new BigDecimal("50.040151"), new BigDecimal("19.937445"));
+        Station station7 = setStation("BP", "Wadowicka 4", "30-415", "Kraków", "no description",
+                new BigDecimal("50.034370"), new BigDecimal("19.940091"));
+        Station station8 = setStation("Stacja paliw Orlen", "Podgórska 32", "33-332", "Kraków", "no description",
+                new BigDecimal("50.051688"), new BigDecimal("19.953870"));
+        Station station9 = setStation("Stacja paliw Orlen", "Włóczków 3", "33-103", "Kraków", "no description",
+                new BigDecimal("50.055109"), new BigDecimal("19.925272"));
+        Station station10 = setStation("Stacja Paliw Petrodom - Kraków", "Cystersów 21", "31-553", "Kraków", "no description",
+                new BigDecimal("50.061824"), new BigDecimal("19.969415"));
 
-        stationManager.saveAll(Arrays.asList(station1, station2, station3));
+        stationManager.saveAll(Arrays.asList(station1, station2, station3, station4, station5, station6, station7, station8, station9, station10));
 
         Price price1 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.14"), new BigDecimal("5.45"),
                 new BigDecimal("2.43"), new BigDecimal("4.88"), station1);
-        Price price2 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.14"), new BigDecimal("5.45"),
-                new BigDecimal("2.43"), new BigDecimal("4.88"), station2);
-        Price price3 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.14"), new BigDecimal("5.45"),
-                new BigDecimal("2.43"), new BigDecimal("4.88"), station3);
+        Price price2 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.16"), new BigDecimal("5.41"),
+                new BigDecimal("2.46"), new BigDecimal("4.83"), station2);
+        Price price3 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.11"), new BigDecimal("5.42"),
+                new BigDecimal("2.41"), new BigDecimal("4.82"), station3);
+        Price price4 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.11"), new BigDecimal("5.42"),
+                new BigDecimal("2.49"), new BigDecimal("4.78"), station4);
+        Price price5 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.24"), new BigDecimal("5.42"),
+                new BigDecimal("2.13"), new BigDecimal("4.88"), station5);
+        Price price6 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.19"), new BigDecimal("5.41"),
+                new BigDecimal("2.65"), new BigDecimal("4.68"), station6);
+        Price price7 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.12"), new BigDecimal("5.34"),
+                new BigDecimal("2.44"), new BigDecimal("4.69"), station7);
+        Price price8 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.34"), new BigDecimal("5.35"),
+                new BigDecimal("2.22"), new BigDecimal("4.90"), station8);
+        Price price9 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.32"), new BigDecimal("5.23"),
+                new BigDecimal("2.12"), new BigDecimal("4.70"), station9);
+        Price price10 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.14"), new BigDecimal("5.44"),
+                new BigDecimal("2.21"), new BigDecimal("4.93"), station10);
+        Price price11 = setPrice(new Timestamp(new Date().getTime()).toString(), new BigDecimal("5.14"), new BigDecimal("5.44"),
+                new BigDecimal("2.11"), new BigDecimal("4.95"), station10);
 
-        priceManager.saveAll(Arrays.asList(price1, price2, price3));
+        priceManager.saveAll(Arrays.asList(price1, price2, price3, price4, price5, price6, price7, price8, price9, price10, price11));
 
         User user1 = setUser("admin", "admin@email.com", passwordEncoder.encode("admin"),
                 "Name", "Surname", "ADMIN", AuthenticationConstants.adminRoleAuthoritiesAsString());
@@ -80,7 +110,7 @@ public class InitDatabase implements CommandLineRunner {
         reportManager.saveAll(Arrays.asList(report1));
     }
 
-    private Station setStation(String name, String street, int postalCode, String city, BigDecimal lon, BigDecimal lat) {
+    private Station setStation(String name, String street, String postalCode, String city, String description, BigDecimal lat, BigDecimal lon) {
         Station station = new Station();
         station.setName(name);
         station.setStreet(street);
@@ -88,6 +118,7 @@ public class InitDatabase implements CommandLineRunner {
         station.setCity(city);
         station.setLon(lon);
         station.setLat(lat);
+        station.setDescription(description);
         return station;
     }
 

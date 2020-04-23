@@ -1,9 +1,11 @@
 package com.licencjat.max.paliwa.reports;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.licencjat.max.paliwa.station.Station;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,6 +30,8 @@ public class Report {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id")
+    @ToString.Exclude
+    @JsonBackReference
     private Station station;
 
 }
