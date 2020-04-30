@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.math.BigDecimal;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,10 +25,10 @@ public class Price {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String timestamp;
-    private BigDecimal pb95;
-    private BigDecimal pb98;
-    private BigDecimal lpg;
-    private BigDecimal diesel;
+    private double pb95;
+    private double pb98;
+    private double lpg;
+    private double diesel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id")

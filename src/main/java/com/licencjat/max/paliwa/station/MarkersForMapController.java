@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/get-markers")
+@RequestMapping("/stations/get")
 public class MarkersForMapController {
 
     StationManager stationManager;

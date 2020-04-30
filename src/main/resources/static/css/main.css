@@ -17,7 +17,8 @@ body {
     padding: 0;
     width: 100%;
     min-height: 100%;
-    font-family: 'Montserrat', 'sans-serif';
+    font-family: 'Montserrat', 'sans-serif' !important;
+    overflow: hidden;
 }
 
 button {
@@ -44,17 +45,11 @@ input {
 }
 
 .no-pointer {
-    pointer-events: none;
-}
-
-.show {
-    display: block;
-    z-index: 1;
+    pointer-events: none !important;
 }
 
 .hide {
-    display: none;
-    z-index: -1;
+    display: none !important;
 }
 
 /* login and register css */
@@ -68,26 +63,40 @@ input {
 
 .modal {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
     background-color: rgb(231, 231, 231);
     border-radius: 1%;
     padding: 10px;
     z-index: 2;
     text-align: -webkit-center;
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.144);
 }
 
 .register {
+    top: calc(50% - 250px);
+    left: calc(50% - 200px);
     height: 500px;
     width: 400px;
 }
 
 .login {
+    top: calc(50% - 125px);
+    left: calc(50% - 200px);
     height: 250px;
     width: 400px;
+}
+
+.slide-from-top {
+    -webkit-animation: slide-from-top 1s;
+    animation: slide-from-top 1s;
+}
+
+@keyframes slide-from-top {
+    from {
+        transform: translateY(-500px)
+    }
+    to {
+        transform: translateY(0px);
+    }
 }
 
 .loginform, .registerform {
@@ -117,29 +126,6 @@ form > input {
 
 #loginbutton, #registerbutton {
     height: 28px;
-}
-
-.animate {
-    -webkit-animation: animatezoom 0.5s;
-    animation: animatezoom 0.5s;
-}
-
-@-webkit-keyframes animatezoom {
-    from {
-        -webkit-transform: scale(0);
-    }
-    to {
-        -webkit-transform: scale(1);
-    }
-}
-
-@keyframes animatezoom {
-    from {
-        transform: scale(0);
-    }
-    from {
-        transform: scale(1);
-    }
 }
 
 /* header section and navigation */
@@ -175,7 +161,7 @@ header {
 }
 
 #menuhome {
-    padding-top: 20px;
+    padding-top: 12px;
     display: inline-block;
     text-decoration: none;
 }

@@ -4,24 +4,23 @@
 
 <head>
     <title>Fuel App</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" th:href="@{/css/maps.css}">
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-        crossorigin="" />
-    <link rel="stylesheet" href="https://labs.easyblog.it/maps/leaflet-search/src/leaflet-search.css" />
+          integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+          crossorigin=""/>
+    <link rel="stylesheet" href="https://labs.easyblog.it/maps/leaflet-search/src/leaflet-search.css"/>
 
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-        crossorigin=""></script>
+            integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+            crossorigin=""></script>
     <script src="https://labs.easyblog.it/maps/leaflet-search/src/leaflet-search.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script th:src="@{/js/add_station.js}"></script>
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -50,31 +49,35 @@
     </div>
 </header>
 
-    <div class="site" id="site">
-        <div class="station-info">
-            <form class="stationform" th:action="@{/stations/add}" method="POST" th:object="${station}" id="stationform">
-                <label for="station-name">Station Name</label>
-                <input th:field="*{name}" type="text" name="station-name" id="station-name" required>
-                <label for="station-street">Street</label>
-                <input th:field="*{street}" type="text" name="station-street" id="station-street" required>
-                <label for="station-postalcode">Postal Code</label>
-                <input th:field="*{postalCode}" type="text" name="station-postalcode" id="station-postalcode" required>
-                <label for="station-city">City</label>
-                <input th:field="*{city}" type="text" name="station-city" id="station-city" required >
-                <label for="station-description">Station Description (optional)</label>
-                <input th:field="*{description}" type="text" name="station-description" id="station-description">
-                <label sec:authorize="hasRole('ROLE_ADMIN')" for="lat">Lat</label>
-                <input sec:authorize="hasRole('ROLE_ADMIN')" th:field="*{lat}" type="text" name="lat" id="lat" required readonly>
-                <label sec:authorize="hasRole('ROLE_ADMIN')" for="lng">Lng</label>
-                <input sec:authorize="hasRole('ROLE_ADMIN')" th:field="*{lon}" type="text" name="lng" id="lng" required readonly>
-                <label sec:authorize="hasRole('ROLE_ADMIN')" for="amenity">Amenity</label>
-                <input sec:authorize="hasRole('ROLE_ADMIN')" type="text" name="amenity" id="amenity" readonly>
-                <button class="submit-station" type="submit" id="submit-station">Submit</button>
-            </form>
-        </div>
-
-        <div id="map"></div>
+<div class="site" id="site">
+    <div class="station-info">
+        <form class="stationform" th:action="@{/stations/add}" method="POST" th:object="${station}" id="stationform">
+            <label for="station-name">Station Name</label>
+            <input th:field="*{name}" type="text" name="station-name" id="station-name" required>
+            <label for="station-street">Street</label>
+            <input th:field="*{street}" type="text" name="station-street" id="station-street" required>
+            <label for="station-postalcode">Postal Code</label>
+            <input th:field="*{postalCode}" type="text" name="station-postalcode" id="station-postalcode" required>
+            <label for="station-city">City</label>
+            <input th:field="*{city}" type="text" name="station-city" id="station-city" required>
+            <label sec:authorize="hasRole('ROLE_ADMIN')" for="lat">Lat</label>
+            <input sec:authorize="hasRole('ROLE_ADMIN')" th:field="*{lat}" type="text" name="lat" id="lat" required
+                   readonly>
+            <label sec:authorize="hasRole('ROLE_ADMIN')" for="lng">Lng</label>
+            <input sec:authorize="hasRole('ROLE_ADMIN')" th:field="*{lon}" type="text" name="lng" id="lng" required
+                   readonly>
+            <label sec:authorize="hasRole('ROLE_ADMIN')" for="amenity">Amenity</label>
+            <input sec:authorize="hasRole('ROLE_ADMIN')" type="text" name="amenity" id="amenity" readonly>
+            <button class="submit-station" type="submit" id="submit-station">Submit</button>
+        </form>
     </div>
+
+    <div id="map"></div>
+</div>
+
+<script th:src="@{/js/utils.js}"></script>
+<script th:src="@{/js/add_station.js}"></script>
+
 </body>
 
 </html>

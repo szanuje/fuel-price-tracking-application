@@ -1,10 +1,5 @@
-.blur {
-    filter: blur(5px);
-}
-
-.no-pointer {
-    pointer-events: none !important;
-}
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Pacifico&display=swap');
 
 #submit-station {
     height: 25px;
@@ -36,17 +31,17 @@
 }
 
 #stations-list {
+    position: absolute;
     font-size: small;
     border-collapse: collapse;
     overflow: auto;
     display: inline-block;
-    position: fixed;
-    max-height: 300px;
-    bottom: 10px;
-    left: 10px;
-    z-index: 1000;
+    max-height: 57%;
+    top: 10px;
+    right: 10px;
     width: 340px;
-    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.144);
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.144);
+    animation: slide-from-right 1s;
 }
 
 #stations-list td, #stations-list th {
@@ -94,17 +89,18 @@
 
 #instructions {
     position: absolute;
-    right: 10px;
-    width: 250px;
-    top: 10px;
-    bottom: 20%;
-    padding: 20px;
+    top: 78px;
+    left: 10px;
+    width: 245px;
+    height: 450px;
+    padding: 15px 20px 20px 20px;
     background-color: rgba(255, 255, 255, 0.9);
     overflow-y: scroll;
-    font-family: sans-serif;
     font-size: 0.8em;
     line-height: 2em;
-    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.144);
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.144);
+    font-family: 'Montserrat', 'sans-serif' !important;
+    animation: slide-from-left 1s;
 }
 
 .trip-info {
@@ -121,4 +117,107 @@
     -moz-border-radius: 50px;
     -webkit-border-radius: 50px;
     border-radius: 50px;
+}
+
+#myChart {
+    position: absolute;
+    bottom: 35px;
+    right: 10px;
+    max-height: 200px;
+    height: 200px;
+    max-width: 340px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.144);
+    animation: slide-from-right 1s;
+}
+
+.mapboxgl-popup-close-button {
+    right: 6px !important;
+    top: 2px !important;
+    font-size: medium;
+}
+
+#d0:hover, #p0:hover, #a0:hover {
+    color: rgba(71, 71, 71, 0.79);
+    cursor: pointer;
+}
+
+.mapboxgl-popup-content {
+    font-family: 'Montserrat', 'sans-serif' !important;
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.144);
+    text-align: center;
+    font-size: 11px;
+    overflow-wrap: break-word;
+}
+
+#update-prices {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 58px;
+    width: 285px;
+    background-color: white;
+    z-index: 2;
+    text-align: center;
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.144);
+    animation: slide-from-left 1s;
+}
+
+#update-prices span {
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+#update-prices input {
+    width: 45px;
+    height: 25px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+#submit-prices {
+    width: 55px;
+    height: 25px;
+}
+
+.slide-from-right {
+    -webkit-animation: slide-from-right 1s;
+    animation: slide-from-right 1s;
+}
+
+@keyframes slide-from-right {
+    from {
+        transform: translateX(300px);
+    }
+    to {
+        transform: translateX(0px);
+    }
+}
+
+.slide-back-right {
+    -webkit-animation: slide-back-right 1s;
+    animation: slide-back-right 1s;
+}
+
+@keyframes slide-back-right {
+    from {
+        transform: translateX(0px);
+    }
+    to {
+        transform: translateX(300px);
+    }
+}
+
+.slide-from-left {
+    -webkit-animation: slide-from-left 1s;
+    animation: slide-from-left 1s;
+}
+
+@keyframes slide-from-left {
+    from {
+        transform: translateX(-300px);
+    }
+    to {
+        transform: translateX(0px);
+    }
 }

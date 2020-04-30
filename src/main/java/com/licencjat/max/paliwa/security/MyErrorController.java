@@ -17,11 +17,12 @@ public class MyErrorController implements ErrorController {
 
     @RequestMapping(AuthenticationConstants.ERROR_PAGE_ENDPOINT)
     public String handleError(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-//        String referer = request.getHeader("Referer");
-//        if (referer.endsWith("/")) {
-//            redirectAttributes.addAttribute("login", "false");
-//            return "redirect:" + AuthenticationConstants.MAIN_PAGE_URL;
-//        }
+        String referer = request.getHeader("Origin");
+        System.out.println(referer);
+        if (referer.endsWith("/")) {
+            redirectAttributes.addAttribute("login", "false");
+            return "redirect:" + AuthenticationConstants.MAIN_PAGE_URL;
+        }
         return "error";
     }
 }

@@ -1,470 +1,551 @@
-document.addEventListener("DOMContentLoaded", function (event) {
+mapboxgl.accessToken = 'pk.eyJ1IjoibWp1ZG5hdXN6eSIsImEiOiJjazdyazV6am8wZHRhM2xwbHljeTAxdnlxIn0.xd5-kSDoh1hODWmdjfuB8A';
 
-    /* detects changes */
-    var observeDOM = (function () {
-        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+var mymap = new mapboxgl.Map({
+    interactive: true,
+    trackResize: true,
+    zoomControl: false,
+    pitchWithRotate: false,
+    dragRotate: false,
+    touchZoomRotate: false,
+    attributionControl: false,
+    container: 'main-map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [19.93673, 50.05844],
+    zoom: 13
+});
 
-        return function (obj, callback) {
-            if (!obj || !obj.nodeType === 1) return; // validation
+var geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl,
+    placeholder: 'Your Location',
+    countries: 'pl',
+    marker: false,
+    clearOnBlur: true,
+    limit: 5,
+});
 
-            if (MutationObserver) {
-                // define a new observer
-                var obs = new MutationObserver(function (mutations, observer) {
-                    callback(mutations);
-                })
-                // have the observer observe foo for changes in children
-                obs.observe(obj, {childList: true, subtree: true});
-            } else if (window.addEventListener) {
-                obj.addEventListener('DOMNodeInserted', callback, false);
-                obj.addEventListener('DOMNodeRemoved', callback, false);
-            }
+var navigation = new mapboxgl.NavigationControl({
+    showCompass: false
+});
+
+var myCircle = new MapboxCircle(mymap.getCenter(), 1000, {
+    editable: true,
+    minRadius: 1,
+    maxRadius: 15000,
+    fillColor: '#29AB87',
+    strokeColor: '#005a8c',
+    strokeWeight: 20,
+    strokeOpacity: 0.01
+});
+
+var myMarker = new mapboxgl.Marker({
+    color: '#000000'
+});
+
+// initialize the map canvas to interact with later
+var canvas = mymap.getCanvasContainer();
+
+var nearbyMarkersAndStations = new Map();
+var currentMarker;
+var currentStation;
+var myChart;
+
+// create a function to make a directions request
+async function getRoute(end) {
+    // make directions request using driving profile
+    let url =
+        'https://api.mapbox.com/directions/v5/mapbox/driving/' +
+        mymap.getCenter().lng + ',' + mymap.getCenter().lat + ';' +
+        end[0] + ',' + end[1] +
+        '?steps=true&geometries=geojson&access_token=' +
+        mapboxgl.accessToken;
+
+    const json = await fetchJSON(url);
+    let data = json.routes[0];
+    let route = data.geometry.coordinates;
+    let geojson = {
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+            'type': 'LineString',
+            'coordinates': route
         }
-    })();
-
-    /* check if element exists */
-    const checkElement = async selector => {
-
-        while (document.querySelector(selector) === null) {
-            await new Promise(resolve => requestAnimationFrame(resolve))
-        }
-
-        return document.querySelector(selector);
     };
-
-    /* get JSON from URL */
-    async function fetchJSON(url, init) {
-        const response = await fetch(url, init);
-        if (!response.ok) {
-            throw new Error("HTTP error " + response.status);
-        }
-        return response.json();
+    if (mymap.getLayer("route")) {
+        mymap.removeLayer("route");
+    }
+    if (mymap.getSource("route")) {
+        mymap.removeSource("route");
     }
 
-    let loginButton = $('#menulogin');
-    let registerButton = $('#menuregister');
-
-    // handle pop-up modals
-    function show(event, modal) {
-        let blurDiv = $('#blur-me');
-        event.stopImmediatePropagation();
-        modal.removeClass('hide');
-        blurDiv.addClass('blur');
-        blurDiv.addClass('no-pointer');
-        $('html').on('click', function (e) {
-            hide(e, modal);
-        });
-    }
-
-    function hide(ev, modal) {
-        let blurDiv = $('#blur-me');
-        if (!$(ev.target).is(modal) && !$(modal).has(ev.target).length > 0) {
-            modal.addClass('hide');
-            blurDiv.removeClass('blur');
-            blurDiv.removeClass('no-pointer');
-            $('html').off();
-        }
-    }
-
-    function handleModals() {
-        let loginModal = $('#login-modal');
-        let registerModal = $('#register-modal');
-
-        loginButton.on('click', function (e) {
-            show(e, loginModal);
-        });
-
-        registerButton.on('click', function (e) {
-            show(e, registerModal);
-        });
-    }
-
-    handleModals();
-
-    // handle warning messages on modals
-    function handleModalWarnings() {
-        let url = window.location.href;
-
-        if (url.endsWith("?login=false")) {
-            loginButton.click();
-            document.getElementById('wrong-username-warning').style.display = 'block';
-            history.replaceState({}, document.title, url.split('?')[0]);  // replace / with . to keep url
-        }
-
-        if (url.endsWith("?login=true")) {
-            loginButton.click();
-            history.replaceState({}, document.title, url.split('?')[0]);  // replace / with . to keep url
-        }
-
-        if (url.endsWith("?register=false")) {
-            registerButton.click();
-            document.getElementById('user-exists-warning').style.display = 'block';
-            history.replaceState({}, document.title, url.split('?')[0]);  // replace / with . to keep url
-        }
-    }
-
-    handleModalWarnings();
-
-    //handle register process
-    function validatePassword(event, pass, confirmPass) {
-
-        if (pass.value !== confirmPass.value) {
-            document.getElementById('password-match-warning').style.display = 'block';
-            document.getElementById('registerbutton').setAttribute('type', 'button');
-            event.preventDefault();
-        } else {
-            document.getElementById('password-match-warning').style.display = 'none';
-            document.getElementById('registerbutton').setAttribute('type', 'submit');
-        }
-    }
-
-    function handleRegisterProcess() {
-        let password_input = document.getElementById('pass');
-        let confirm_password_input = document.getElementById('confirm-pass');
-        password_input.onkeyup = function (event) {
-            validatePassword(event, password_input, confirm_password_input);
-        };
-        confirm_password_input.onkeyup = function (event) {
-            validatePassword(event, password_input, confirm_password_input);
-        };
-    }
-
-    handleRegisterProcess();
-
-    /* init map */
-    mapboxgl.accessToken = 'pk.eyJ1IjoibWp1ZG5hdXN6eSIsImEiOiJjazdyazV6am8wZHRhM2xwbHljeTAxdnlxIn0.xd5-kSDoh1hODWmdjfuB8A';
-
-    var mymap = new mapboxgl.Map({
-        interactive: true,
-        trackResize: true,
-        zoomControl: false,
-        pitchWithRotate: false,
-        dragRotate: false,
-        touchZoomRotate: false,
-        container: 'main-map',
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [19.93673, 50.05844],
-        zoom: 13
-    });
-
-    var geocoder = new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl,
-        placeholder: 'Your Location',
-        countries: 'pl',
-        marker: false
-    });
-
-    var navigation = new mapboxgl.NavigationControl({
-        showCompass: false
-    });
-
-    var myCircle = new MapboxCircle(mymap.getCenter(), 1000, {
-        editable: true,
-        minRadius: 1,
-        maxRadius: 15000,
-        fillColor: '#29AB87',
-        strokeColor: '#005a8c',
-        strokeWeight: 20,
-        strokeOpacity: 0.01
-    });
-
-    var myMarker = new mapboxgl.Marker({
-        color: '#000000'
-    });
-
-    // initialize the map canvas to interact with later
-    var canvas = mymap.getCanvasContainer();
-
-    // create a function to make a directions request
-    function getRoute(end) {
-        // make directions request using driving profile
-        var url =
-            'https://api.mapbox.com/directions/v5/mapbox/driving/' +
-            mymap.getCenter().lng +
-            ',' +
-            mymap.getCenter().lat +
-            ';' +
-            end[0] +
-            ',' +
-            end[1] +
-            '?steps=true&geometries=geojson&access_token=' +
-            mapboxgl.accessToken;
-
-        var req = new XMLHttpRequest();
-        req.open('GET', url, true);
-        req.onload = function () {
-            var json = JSON.parse(req.response);
-            var data = json.routes[0];
-            var route = data.geometry.coordinates;
-            var geojson = {
+    mymap.addLayer({
+        'id': 'route',
+        'type': 'line',
+        'source': {
+            'type': 'geojson',
+            'data': {
                 'type': 'Feature',
                 'properties': {},
                 'geometry': {
                     'type': 'LineString',
-                    'coordinates': route
-                }
-            };
-            if (mymap.getLayer("route")) {
-                mymap.removeLayer("route");
-            }
-            if (mymap.getSource("route")) {
-                mymap.removeSource("route");
-            }
-
-            mymap.addLayer({
-                'id': 'route',
-                'type': 'line',
-                'source': {
-                    'type': 'geojson',
-                    'data': {
+                    'coordinates': {
                         'type': 'Feature',
                         'properties': {},
                         'geometry': {
                             'type': 'LineString',
-                            'coordinates': {
-                                'type': 'Feature',
-                                'properties': {},
-                                'geometry': {
-                                    'type': 'LineString',
-                                    'coordinates': route
-                                }
-                            }
+                            'coordinates': route
                         }
                     }
-                },
-                'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                'paint': {
-                    'line-color': '#3887be',
-                    'line-width': 6,
-                    'line-opacity': 0.75
                 }
-            });
-
-            mymap.getSource('route').setData(geojson);
-
-            // get the sidebar and add the instructions
-            var instructions = document.getElementById('instructions');
-            var steps = data.legs[0].steps;
-
-            var tripInstructions = [];
-            for (var i = 0; i < steps.length; i++) {
-                tripInstructions.push('<br><li>' + steps[i].maneuver.instruction) +
-                '</li>';
-                instructions.innerHTML =
-                    '<span class="trip-info">' +
-                    (data.distance / 1000).toFixed(1) + 'km | ' + Math.floor(data.duration / 60) + 'min</span>' +
-                    tripInstructions;
             }
-            instructions.classList.remove('hide');
-        };
-        req.send();
-    }
-
-    mymap.on('load', function () {
-        mymap
-            .addControl(navigation, 'top-left')
-            .addControl(geocoder, 'top-left');
+        },
+        'layout': {
+            'line-join': 'round',
+            'line-cap': 'round'
+        },
+        'paint': {
+            'line-color': '#0099cc',
+            'line-width': 6,
+            'line-opacity': 0.75
+        }
     });
 
-    // allow the user to click the map to change the destination
-    function setDestinationPoint(lng, lat) {
-        canvas.style.cursor = '';
-        var coords = [lng, lat];
-        var end = {
-            'type': 'FeatureCollection',
-            'features': [
-                {
-                    'type': 'Feature',
-                    'properties': {},
-                    'geometry': {
-                        'type': 'Point',
-                        'coordinates': coords
-                    }
-                }
-            ]
-        };
-        if (mymap.getLayer('end')) {
-            mymap.getSource('end').setData(end);
-        } else {
-            mymap.addLayer({
-                'id': 'end',
-                'type': 'circle',
-                'source': {
-                    'type': 'geojson',
-                    'data': {
-                        'type': 'FeatureCollection',
-                        'features': [
-                            {
-                                'type': 'Feature',
-                                'properties': {},
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': coords
-                                }
-                            }
-                        ]
-                    }
-                },
-                'paint': {
-                    'circle-radius': 10,
-                    'circle-color': '#0099cc'
-                }
-            });
+    mymap.getSource('route').setData(geojson);
+
+    // get the sidebar and add the instructions
+    let instructions = document.getElementById('instructions');
+    fillRouteInstructions(instructions, data);
+}
+
+function fillRouteInstructions(element, data) {
+    let steps = data.legs[0].steps;
+
+    let dir = '';
+    let icon = '';
+    let tripInstructions = [];
+
+    for (let i = 0; i < steps.length; i++) {
+        dir = steps[i].maneuver.instruction;
+        icon = getDirectionImage(dir);
+        tripInstructions += '<li style="list-style-image: url(' + icon + ');">' + dir + '</li>';
+    }
+
+    element.innerHTML =
+        '<span class="trip-info">' +
+        (data.distance / 1000).toFixed(1) + 'km | ' +
+        Math.floor(data.duration / 60) + 'min</span>' +
+        '<br>' +
+        tripInstructions;
+
+    element.classList.remove('hide');
+    $('#instructions').css('display', '');
+}
+
+function getDirectionImage(maneuver) {
+    let dir = maneuver;
+    if (dir.includes('Head')) {
+        return '/images/start.png';
+    } else if (dir.includes('arrived')) {
+        return '/images/finish.png';
+    } else if (dir.includes('U-turn')) {
+        return '/images/u-turn.png';
+    } else if (dir.includes('right')) {
+        if (dir.includes('slight')) {
+            return '/images/bear-right.png';
         }
-        getRoute(coords);
-        markers_list.forEach(marker => {
-            if (marker.getLngLat().lat === lat && marker.getLngLat().lng === lng) {
-                marker.getPopup().addTo(mymap);
+        return '/images/right.png';
+    } else if (dir.includes('left')) {
+        if (dir.includes('slight')) {
+            return '/images/bear-left.png';
+        }
+        return '/images/left.png';
+    } else if (dir.includes('Enter')) {
+        return '/images/roundabout.png';
+    } else {
+        return '/images/error.png';
+    }
+}
+
+// allow the user to click the map to change the destination
+async function setDestinationAndShowRoute(lng, lat) {
+    canvas.style.cursor = '';
+    var coords = [lng, lat];
+    var end = {
+        'type': 'FeatureCollection',
+        'features': [
+            {
+                'type': 'Feature',
+                'properties': {},
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': coords
+                }
+            }
+        ]
+    };
+    if (mymap.getLayer('end')) {
+        mymap.getSource('end').setData(end);
+    } else {
+        mymap.addLayer({
+            'id': 'end',
+            'type': 'circle',
+            'source': {
+                'type': 'geojson',
+                'data': {
+                    'type': 'FeatureCollection',
+                    'features': [
+                        {
+                            'type': 'Feature',
+                            'properties': {},
+                            'geometry': {
+                                'type': 'Point',
+                                'coordinates': coords
+                            }
+                        }
+                    ]
+                }
+            },
+            'paint': {
+                'circle-radius': 3,
+                'circle-color': '#0099cc'
             }
         });
     }
+    await getRoute(coords);
+}
 
-    myMarker
-        .setLngLat(mymap.getCenter())
-        .addTo(mymap);
+function findMarkerAndOpenPopup(nearbyMarkersAndStations, lat, lng) {
 
-    myCircle.addTo(mymap);
+    for (const marker of nearbyMarkersAndStations.keys()) {
+        if (marker.getLngLat().lat === Number(lat) && marker.getLngLat().lng === Number(lng)) {
+            if (currentMarker !== undefined) {
+                currentMarker.getPopup().remove();
+            }
 
-    async function updateMarkers(lat, lng, distance, markers_list, map) {
-        let table = document.getElementById('stations-list');
-        if (table != null) table.remove();
+            currentMarker = marker;
+            currentStation = nearbyMarkersAndStations.get(marker);
+            currentMarker.getPopup().addTo(mymap);
 
-        let data = await fetchJSON('http://localhost:8080/get-markers?lat=' + lat + '&lon=' + lng + '&distance=' + distance);
+            let directionsTrigger = $('#d0');
+            let priceChartTrigger = $('#p0');
+            let addPriceTrigger = $('#a0');
 
-        if (data.length > 0) {
-            table = generateTableSkeleton();
-            document.getElementById('site').appendChild(table);
+            let onClickRoute = async function () {
+                await setDestinationAndShowRoute(lng, lat);
+            };
+            let onClickPriceChart = function () {
+                generatePriceChart(currentStation);
+            };
+            let onClickAddPrices = function () {
+                let updatePricesForm = $('#update-prices');
+                $(updatePricesForm).removeClass('hide');
+                $(updatePricesForm).css('display', '');
+                $(updatePricesForm).off();
 
-            data.forEach((item) => {
+                let stationDetailsSpan = $('#update-station-details');
+                $(stationDetailsSpan).text(currentStation.name + ', ' + currentStation.street);
 
-                let popup = new mapboxgl.Popup({
-                    offset: 25,
-                    closeButton: true,
-                    closeOnClick: true
-                }).setHTML(
-                    item.name + '<br>' + item.street
-                );
+                $(updatePricesForm).submit(function (event) {
+                    event.preventDefault();
+                    let url = 'http://localhost:8080/prices/add?id=' + currentStation.id;
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: $(updatePricesForm).serialize(),
+                        success: function (response) {
+                            console.log(response);
+                            if (response === 'success') {
+                                alert('Successfully added price');
+                                $(updatePricesForm).addClass('hide');
+                                $(updatePricesForm).off();
+                            } else if (response === 'failure') {
+                                alert('Error');
+                            } else {
+                                alert('Unknown Error');
+                            }
+                        }
+                    });
+                });
+            };
 
-                let temp_marker = new mapboxgl.Marker({
-                    color: '#0099cc'
-                })
-                    .setLngLat([item.lon, item.lat])
-                    .setPopup(popup)
-                    .addTo(map);
-
-                markers_list.push(temp_marker);
-                populateTable(table, item);
-            });
-
-            sortTable();
-            $('#stations-list').find('tbody:nth-child(n+2)').on('click', receiveCoordsOnTableclick);
+            $(directionsTrigger).on('click', onClickRoute);
+            $(priceChartTrigger).on('click', onClickPriceChart);
+            $(addPriceTrigger).one('click', onClickAddPrices);
         }
+    }
+}
 
+function generatePriceChart(station) {
+
+    let chart = document.getElementById('myChart');
+    let ctx = chart.getContext('2d');
+    ctx.height = 300;
+
+    let timestamps = [];
+    let pb95 = [];
+    let pb98 = [];
+    let lpg = [];
+    let diesel = [];
+
+    if (station.prices.length > 0) {
+        for (let i = station.prices.length - 1; i >= 0; i--) {
+            if (station.prices.length - i > 15) break;
+
+            timestamps.unshift(station.prices[i].timestamp.substring(0, 16));
+
+            if (station.prices[i].pb95 !== 0.0) {
+                pb95.unshift(station.prices[i].pb95);
+            } else {
+                pb95.unshift(null);
+            }
+            if (station.prices[i].pb98 !== 0.0) {
+                pb98.unshift(station.prices[i].pb98);
+            } else {
+                pb98.unshift(null);
+            }
+            if (station.prices[i].lpg !== 0.0) {
+                lpg.unshift(station.prices[i].lpg);
+            } else {
+                lpg.unshift(null);
+            }
+            if (station.prices[i].diesel !== 0.0) {
+                diesel.unshift(station.prices[i].diesel);
+            } else {
+                diesel.unshift(null);
+            }
+
+        }
     }
 
-    function receiveCoordsOnTableclick() {
-        let lng = $(this).find('td:nth-child(6)').text();
-        let lat = $(this).find('td:nth-child(7)').text();
-        setDestinationPoint(Number(lng), Number(lat));
-    }
+    if (myChart != null) myChart.destroy();
 
-    function clearMarkers(markers_list) {
-        markers_list.forEach((marker) => marker.remove());
-        markers_list.length = 0;
-    }
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: timestamps,
+            datasets: [{
+                label: 'PB 95',
+                data: pb95,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                fill: false
+            },
+                {
+                    label: 'PB 98',
+                    data: pb98,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    fill: false
+                },
+                {
+                    label: 'LPG',
+                    data: lpg,
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1,
+                    fill: false
+                },
+                {
+                    label: 'Diesel',
+                    data: diesel,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            spanGaps: true,
 
-    var markers_list = [];
+            legend: {
+                display: true,
+                labels: {
+                    fontSize: 10
+                }
+            },
+            title: {
+                display: true,
+                position: 'top',
+                text: [station.name + ', ' + station.street + ', ' + station.city, 'Latest prices']
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        display: false
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: false
+                    }
+                }]
+            },
+            layout: {
+                padding: {
+                    right: 10
+                }
+            }
+        }
+    });
+    chart.classList.remove('hide');
+}
 
-    myCircle.on('radiuschanged', async function (circleObj) {
-        let coords = mymap.getCenter();
-        clearMarkers(markers_list);
-        await updateMarkers(coords.lat, coords.lng, circleObj.getRadius(), markers_list, mymap);
+async function updateMarkers(lat, lng, distance, nearbyMarkersAndStations, map) {
+    let table = $('#stations-list');
+    $(table).addClass('hide');
+    clearTable(table);
+    let isTableEmpty = true;
+
+
+    let url = 'http://localhost:8080/stations/get?lat=' + lat + '&lon=' + lng + '&distance=' + distance;
+    // global variable
+    let nearbyStationsJSON = await fetchJSON(url);
+    console.log(nearbyStationsJSON);
+
+    nearbyStationsJSON.forEach((item) => {
+        if (item.prices.length > 0) {
+
+            let temp_popup = new mapboxgl.Popup({
+                closeButton: true,
+                closeOnClick: true
+            }).setHTML(
+                item.name + '<br><small>' + item.street +
+                '</small><br>' +
+                '<span id="d0"><b>Directions</b></span> | <span id="p0"><b>Latest Prices</b></span> | <span id="a0"><b>Add Prices</b></span>'
+            );
+
+            let temp_marker = new mapboxgl.Marker({
+                color: '#0099cc',
+                closeOnMove: true,
+            })
+                .setLngLat([item.lon, item.lat])
+                .setPopup(temp_popup)
+                .addTo(map);
+
+            nearbyMarkersAndStations.set(temp_marker, item);
+            populateTable(table, item);
+            isTableEmpty = false;
+        }
     });
 
-    mymap.on('dragend', async function () {
-        let origin = mymap.getCenter();
-        clearMarkers(markers_list);
-        await updateMarkers(origin.lat, origin.lng, myCircle.getRadius(), markers_list, mymap);
-    });
+    if (!isTableEmpty) {
+        $(table).removeClass('hide');
+        document.querySelectorAll('th').forEach(th => th.addEventListener('click', sortTable));
+        $(table).find('tr:nth-child(n+2)').on('click', function () {
+            let lng = $(this).find('td:nth-child(6)').text();
+            let lat = $(this).find('td:nth-child(7)').text();
+            findMarkerAndOpenPopup(nearbyMarkersAndStations, Number(lat), Number(lng));
+        });
+    }
+}
 
-    mymap.on('move', function () {
-        myMarker.setLngLat(mymap.getCenter());
-        myCircle.setCenter(mymap.getCenter());
-    });
+function clearTable(table) {
+    $(table).find('tbody > tr:nth-child(n+2)').remove();
+}
 
-    /* sort tables */
-    function sortTable() {
-        const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+function clearMarkers(_nearbyMarkersAndStations) {
+    for (marker of _nearbyMarkersAndStations.keys()) marker.remove();
+    nearbyMarkersAndStations.clear();
+}
 
-        const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
-                v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
-        )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+/* handle dynamic table with prices */
+function populateTable(table, data) {
 
-        // do the work...
-        document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
-            const table = th.closest('table');
-            Array.from(table.querySelectorAll('tbody:nth-child(n+2) > tr'))
-                .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
-                .forEach(tr => table.appendChild(tr.parentNode));
-        })));
+    let pb95 = 0.0;
+    let pb98 = 0.0;
+    let lpg = 0.0;
+    let diesel = 0.0;
+
+    let pb95_set = false;
+    let pb98_set = false;
+    let lpg_set = false;
+    let diesel_set = false;
+
+    for (let i = data.prices.length - 1; i >= 0; i--) {
+
+        if (!pb95_set) {
+            if (data.prices[i].pb95 !== 0.0) {
+                pb95 = data.prices[i].pb95;
+                pb95_set = true;
+            }
+        }
+        if (!pb98_set) {
+            if (data.prices[i].pb98 !== 0.0) {
+                pb98 = data.prices[i].pb98;
+                pb98_set = true;
+            }
+        }
+        if (!lpg_set) {
+            if (data.prices[i].lpg !== 0.0) {
+                lpg = data.prices[i].lpg;
+                lpg_set = true;
+            }
+        }
+        if (!diesel_set) {
+            if (data.prices[i].diesel !== 0.0) {
+                diesel = data.prices[i].diesel;
+                diesel_set = true;
+            }
+        }
+        console.log(i);
+        if (pb95_set && pb98_set && lpg_set && diesel_set) break;
     }
 
-    /* handle dynamic table with prices */
-    function populateTable(table, data) {
+    let html = [
+        '            <tr>\n' +
+        '                <td>\n' +
+        '                    <ul>\n' +
+        '                        <li>' + data.name + '</li>\n' +
+        '                        <li>' + data.street + '</li>\n' +
+        '                    </ul>\n' +
+        '                </td>\n' +
+        '                <td>' + pb95 + '</td>\n' +
+        '                <td>' + pb98 + '</td>\n' +
+        '                <td>' + lpg + '</td>\n' +
+        '                <td>' + diesel + '</td>\n' +
+        '                <td style="display: none;">' + data.lon + '</td>\n' +
+        '                <td style="display: none;">' + data.lat + '</td>\n' +
+        '            </tr>'
+    ].join('\n');
+    $(table).find('tbody').append(html);
+}
 
-        let html = [
-            '            <tr>\n' +
-            '                <td>\n' +
-            '                    <ul>\n' +
-            '                        <li>' + data.name + '</li>\n' +
-            '                        <li>' + data.street + '</li>\n' +
-            '                    </ul>\n' +
-            '                </td>\n' +
-            '                <td>' + data.prices[0].pb95 + '</td>\n' +
-            '                <td>' + data.prices[0].pb98 + '</td>\n' +
-            '                <td>' + data.prices[0].lpg + '</td>\n' +
-            '                <td>' + data.prices[0].diesel + '</td>\n' +
-            '                <td style="display: none;">' + data.lon + '</td>\n' +
-            '                <td style="display: none;">' + data.lat + '</td>\n' +
-            '            </tr>'
-        ].join('\n');
-        table.insertAdjacentHTML('beforeend', html);
-    }
+mymap.on('load', function () {
+    mymap
+        .addControl(navigation, 'top-left')
+        .addControl(geocoder, 'top-left');
+});
+mymap.on('dragend', async function () {
+    let origin = mymap.getCenter();
+    clearMarkers(nearbyMarkersAndStations);
+    await updateMarkers(origin.lat, origin.lng, myCircle.getRadius(), nearbyMarkersAndStations, mymap);
+    $('#myChart').hide('slow');
+    $('#instructions').hide('slow');
+    $('#update-prices').hide('slow');
 
-    function generateTableSkeleton() {
-        let table = document.createElement('table');
-        table.id = 'stations-list';
-        let titles = document.createElement('tr');
+});
+mymap.on('move', function () {
+    myMarker.setLngLat(mymap.getCenter());
+    myCircle.setCenter(mymap.getCenter());
+});
+mymap.on('click', function (e) {
+    e.stopPropagation();
+});
 
-        let station_title = document.createElement('th');
-        station_title.innerHTML = 'Station';
-        let pb95_title = document.createElement('th');
-        pb95_title.innerHTML = 'Pb 95 <i class="fas fa-sort"></i>';
-        let pb98_title = document.createElement('th');
-        pb98_title.innerHTML = 'Pb 98 <i class="fas fa-sort"></i>';
-        let lpg_title = document.createElement('th');
-        lpg_title.innerHTML = 'LPG <i class="fas fa-sort"></i>';
-        let diesel_title = document.createElement('th');
-        diesel_title.innerHTML = 'Diesel <i class="fas fa-sort"></i>';
-        let lng_title = document.createElement('th');
-        lng_title.innerHTML = 'Longitude';
-        lng_title.style.display = 'none';
-        let lat_title = document.createElement('th');
-        lat_title.innerHTML = 'Latitude';
-        lat_title.style.display = 'none';
+myMarker
+    .setLngLat(mymap.getCenter())
+    .addTo(mymap);
 
-        titles.appendChild(station_title);
-        titles.appendChild(pb95_title);
-        titles.appendChild(pb98_title);
-        titles.appendChild(lpg_title);
-        titles.appendChild(diesel_title);
-        titles.appendChild(lng_title);
-        titles.appendChild(lat_title);
-        table.appendChild(titles);
-        return table;
-    }
-
+myCircle.addTo(mymap);
+myCircle.on('radiuschanged', async function (circleObj) {
+    let coords = mymap.getCenter();
+    clearMarkers(nearbyMarkersAndStations);
+    await updateMarkers(coords.lat, coords.lng, circleObj.getRadius(), nearbyMarkersAndStations, mymap);
+    $('#myChart').hide('slow');
+    $('#instructions').hide('slow');
+    $('#update-prices').hide('slow');
 });

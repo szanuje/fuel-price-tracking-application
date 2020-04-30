@@ -18,35 +18,29 @@ public class AuthenticationConstants {
     static final String DEFAULT_SUCCESS_URL_ENDPOINT = "/";
     static final String LOGOUT_URL_ENDPOINT = "/logout";
     static final String LOGOUT_SUCCESS_URL_ENDPOINT = "/";
+    static final String TEST_URL_ENDPOINT = "/test";
 
-    static final String GET_MARKERS_ENDPOINT = "/get-markers";
-    static final String TEST_URL_ENDPOINTS = "/test";
-    static final String STATIONS_URL_ENDPOINTS = "/stations/**";
-    static final String PRICES_URL_ENDPOINTS = "/prices/**";
-    static final String USERS_URL_ENDPOINTS = "/users/**";
+    static final String GET_MARKERS_ENDPOINT = "/stations/get";
+    static final String GET_STATION_ENDPOINT = "/stations/{id}";
+    static final String ADD_PRICE_ENDPOINT = "/prices/add/**";
+
+    static final String ADD_STATION_ENDPOINT = "/stations/add";
+
     static final String CONSOLE_URL_ENDPOINTS = "/console/**";
 
-    private static final Pair<String, String> TEST_ACCESS_AUTHORITY = Pair.of("ACCESS_TEST", TEST_URL_ENDPOINTS);
-    private static final Pair<String, String> STATIONS_ACCESS_AUTHORITY = Pair.of("ACCESS_STATIONS", STATIONS_URL_ENDPOINTS);
-    private static final Pair<String, String> PRICES_ACCESS_AUTHORITY = Pair.of("ACCESS_PRICES", PRICES_URL_ENDPOINTS);
-    private static final Pair<String, String> USERS_ACCESS_AUTHORITY = Pair.of("ACCESS_USERS", USERS_URL_ENDPOINTS);
+    private static final Pair<String, String> ADD_STATION_AUTHORITY = Pair.of("ACCESS_ADDSTATION", ADD_STATION_ENDPOINT);
+
     private static final Pair<String, String> CONSOLE_ACCESS_AUTHORITY = Pair.of("ACCESS_CONSOLE", CONSOLE_URL_ENDPOINTS);
 
     private static List<Pair<String, String>> userPairs() {
         return List.of(
-//                TEST_ACCESS_AUTHORITY,
-                STATIONS_ACCESS_AUTHORITY,
-                PRICES_ACCESS_AUTHORITY
+                ADD_STATION_AUTHORITY
         );
     }
 
     private static List<Pair<String, String>> adminPairs() {
         return List.of(
-//                TEST_ACCESS_AUTHORITY,
-                STATIONS_ACCESS_AUTHORITY,
-                PRICES_ACCESS_AUTHORITY,
-                CONSOLE_ACCESS_AUTHORITY,
-                USERS_ACCESS_AUTHORITY
+                CONSOLE_ACCESS_AUTHORITY
         );
     }
 
@@ -56,9 +50,11 @@ public class AuthenticationConstants {
                 LOGIN_POST_URL_ENDPOINT,
                 REGISTER_POST_URL_ENDPOINT,
                 ERROR_PAGE_ENDPOINT,
-                TEST_URL_ENDPOINTS,
+                TEST_URL_ENDPOINT,
                 CONSOLE_URL_ENDPOINTS,
-                GET_MARKERS_ENDPOINT
+                GET_MARKERS_ENDPOINT,
+                GET_STATION_ENDPOINT,
+                ADD_PRICE_ENDPOINT
         ).toArray(String[]::new);
     }
 
