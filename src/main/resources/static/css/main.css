@@ -85,20 +85,6 @@ input {
     width: 400px;
 }
 
-.slide-from-top {
-    -webkit-animation: slide-from-top 1s;
-    animation: slide-from-top 1s;
-}
-
-@keyframes slide-from-top {
-    from {
-        transform: translateY(-500px)
-    }
-    to {
-        transform: translateY(0px);
-    }
-}
-
 .loginform, .registerform {
     width: 300px;
 }
@@ -166,15 +152,6 @@ header {
     text-decoration: none;
 }
 
-@keyframes move {
-    0% {
-        transform: translateY(0px);
-    }
-    100% {
-        transform: translateY(-6px);
-    }
-}
-
 .logo p {
     font-family: 'Pacifico', 'cursive';
     font-size: 55px;
@@ -194,7 +171,7 @@ header {
 
 .navigation ul {
     list-style: none;
-
+    line-height: 30px;
 }
 
 .navigation ul li {
@@ -205,7 +182,6 @@ header {
 }
 
 .navigation-text {
-    vertical-align: -webkit-baseline-middle;
     color: white;
     font-size: 18px;
     font-weight: bold;
@@ -226,5 +202,5 @@ header {
     width: 100%;
     margin: 0;
     padding: 0;
-    background-color: white;
+    background-color: whitesmoke;
 }

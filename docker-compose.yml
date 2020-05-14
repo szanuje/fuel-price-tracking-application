@@ -1,0 +1,22 @@
+version: '3'
+services:
+  fuel-db:
+    container_name: 'fuel-app-db'
+    image: mysql
+    environment:
+      MYSQL_DATABASE: fuel-db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3306:3306"
+    restart: always
+  fuel-app:
+    container_name: 'fuel-app'
+    depends_on:
+      - fuel-db
+    build: .
+    ports:
+      - "9090:9090"
+    restart: always

@@ -47,11 +47,6 @@
             history.replaceState({}, document.title, url.split('?')[0]);  // replace / with . to keep url
         }
 
-        if (url.endsWith("?login=true")) {
-            loginButton.click();
-            history.replaceState({}, document.title, url.split('?')[0]);  // replace / with . to keep url
-        }
-
         if (url.endsWith("?register=false")) {
             registerButton.click();
             document.getElementById('user-exists-warning').style.display = 'block';

@@ -53,3 +53,7 @@ const checkElement = async selector => {
 
     return document.querySelector(selector);
 };
+
+function isNotNullNorUndefined(o) {
+    return (typeof (o) !== 'undefined' && o !== null);
+}

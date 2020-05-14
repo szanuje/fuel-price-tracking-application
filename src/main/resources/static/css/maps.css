@@ -10,6 +10,7 @@
     float: right;
     width: calc(100% - 405px);
     right: 5px;
+    top: 5px;
 }
 
 #stationform {
@@ -178,46 +179,4 @@
 #submit-prices {
     width: 55px;
     height: 25px;
-}
-
-.slide-from-right {
-    -webkit-animation: slide-from-right 1s;
-    animation: slide-from-right 1s;
-}
-
-@keyframes slide-from-right {
-    from {
-        transform: translateX(300px);
-    }
-    to {
-        transform: translateX(0px);
-    }
-}
-
-.slide-back-right {
-    -webkit-animation: slide-back-right 1s;
-    animation: slide-back-right 1s;
-}
-
-@keyframes slide-back-right {
-    from {
-        transform: translateX(0px);
-    }
-    to {
-        transform: translateX(300px);
-    }
-}
-
-.slide-from-left {
-    -webkit-animation: slide-from-left 1s;
-    animation: slide-from-left 1s;
-}
-
-@keyframes slide-from-left {
-    from {
-        transform: translateX(-300px);
-    }
-    to {
-        transform: translateX(0px);
-    }
 }

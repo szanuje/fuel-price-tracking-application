@@ -18,7 +18,7 @@ async function getOSMData(osm_type, osm_id) {
     //             });
     //     });
     return await fetchJSON(
-        'http://overpass-api.de/api/interpreter?data=[out:json];' + osm_type + '(' + osm_id + ');out;'
+        'http://overpass-api.de/api/interpreter?data=[out:json];' + osm_type + '(' + osm_id + ');out%20meta;'
     );
 }
 
@@ -71,30 +71,27 @@ mymap.on('move', function () {
 });
 
 var old_zoom = mymap.getZoom();
+
 mymap.on('moveend', async function () {
     let coords = myMarker.getLatLng();
 
     if (old_zoom === mymap.getZoom()) {
         let nominatim_data = await getNominatimData(coords.lat, coords.lng);
         let osm_data = await getOSMData(nominatim_data.osm_type, nominatim_data.osm_id);
+        console.log(osm_data);
         let address = await getPlaceAddress(nominatim_data);
         let tags = await getPlaceTags(osm_data);
 
-        let street;
-        let city;
-
-        if (address.village != null) {
-            city = address.village;
-            street = city + ' ' + address.road;
-        }
-        if (address.city != null) {
-            city = address.city;
-            let road = address.road != null ? address.road : city;
-            street = road + ' ' + address.house_number;
+        let street = [address.road, address.city].find(isNotNullNorUndefined);
+        let city = [address.village, address.town, address.city].find(isNotNullNorUndefined);
+        if (address.house_number != null) {
+            street = street + ' ' + address.house_number;
         }
         let postcode = address.postcode;
         let amenity = tags.amenity;
         let name = tags.name != null ? tags.name : tags['name:en'];
+
+        console.log(street + ' ' + city);
 
         $('#station-city').val(city);
         $('#station-postalcode').val(postcode);

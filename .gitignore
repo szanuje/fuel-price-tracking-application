@@ -1,4 +1,4 @@
-HELP.md
+*.mv.db
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
