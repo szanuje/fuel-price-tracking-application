@@ -4,7 +4,6 @@ async function fetchJSON(url, init) {
     if (!response.ok) {
         throw new Error("HTTP error " + response.status);
     }
-    console.log('fetchJSON() - ' + url);
     return response.json();
 }
 

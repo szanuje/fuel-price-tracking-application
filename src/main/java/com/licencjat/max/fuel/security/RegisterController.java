@@ -23,14 +23,14 @@ public class RegisterController {
 
     @RequestMapping(AuthenticationConstants.REGISTER_ENDPOINT)
     public String addUser(HttpServletRequest servletRequest, @ModelAttribute("user") User user) throws UserAlreadyExistsException {
-        if (userManager.findByUsername(user.getUsername()).isEmpty()) {
+        if (userManager.findByUsername(user.getUsername()).isEmpty() && userManager.findByEmail(user.getEmail()).isEmpty()) {
             user.setRoles("USER");
             user.setAuthorities(AuthenticationConstants.userRoleAuthoritiesAsString());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userManager.save(user);
             return "redirect:" + servletRequest.getHeader("Referer");
         } else {
-            throw new UserAlreadyExistsException(user.getUsername());
+            throw new UserAlreadyExistsException(user.toString());
         }
     }
 }

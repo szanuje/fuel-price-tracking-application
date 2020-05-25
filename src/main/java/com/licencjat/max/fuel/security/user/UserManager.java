@@ -19,6 +19,9 @@ public class UserManager {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+    public Optional<User> findByEmail(String username) {
+        return userRepository.findByEmail(username);
+    }
 
     public Iterable<User> findAll() {
         return userRepository.findAll();

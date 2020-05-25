@@ -1,32 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Pacifico&display=swap');
 
-#submit-station {
-    height: 25px;
-}
-
-#map {
-    height: 500px;
-    float: right;
-    width: calc(100% - 405px);
-    right: 5px;
-    top: 5px;
-}
-
-#stationform {
-    width: 60%;
-    padding-top: 20px;
-}
-
-.station-info {
-    text-align: -webkit-center;
-    float: left;
-    width: 400px;
-}
-
-/* main site maps */
-
-#main-map {
+#main-map{
     height: 100%;
     width: 100%;
 }

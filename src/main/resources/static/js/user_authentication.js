@@ -43,13 +43,17 @@
 
         if (url.endsWith("?login=false")) {
             loginButton.click();
-            document.getElementById('wrong-username-warning').style.display = 'block';
+            $('#wrong-username-warning').removeClass('hide')
+            history.replaceState({}, document.title, url.split('?')[0]);  // replace / with . to keep url
+        }
+        if (url.endsWith("?login=true")) {
+            loginButton.click();
             history.replaceState({}, document.title, url.split('?')[0]);  // replace / with . to keep url
         }
 
         if (url.endsWith("?register=false")) {
             registerButton.click();
-            document.getElementById('user-exists-warning').style.display = 'block';
+            $('#user-exists-warning').removeClass('hide');
             history.replaceState({}, document.title, url.split('?')[0]);  // replace / with . to keep url
         }
     }
@@ -58,12 +62,12 @@
     function validatePassword(event, pass, confirmPass) {
 
         if (pass.value !== confirmPass.value) {
-            document.getElementById('password-match-warning').style.display = 'block';
-            document.getElementById('registerbutton').setAttribute('type', 'button');
+            $('#password-match-warning').removeClass('hide')
+            $('#registerbutton').css('type', 'button');
             event.preventDefault();
         } else {
-            document.getElementById('password-match-warning').style.display = 'none';
-            document.getElementById('registerbutton').setAttribute('type', 'submit');
+            $('#password-match-warning').addClass('hide')
+            $('#registerbutton').css('type', 'submit');
         }
     }
 

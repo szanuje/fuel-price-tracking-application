@@ -4,7 +4,6 @@ import com.licencjat.max.fuel.exceptions.EmptyPricesException;
 import com.licencjat.max.fuel.exceptions.StationAlreadyExistsException;
 import com.licencjat.max.fuel.exceptions.StationNotFoundException;
 import com.licencjat.max.fuel.exceptions.UserAlreadyExistsException;
-import com.licencjat.max.fuel.security.AuthenticationConstants;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

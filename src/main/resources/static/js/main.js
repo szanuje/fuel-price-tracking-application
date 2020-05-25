@@ -253,13 +253,10 @@ function findMarkerAndOpenPopup(nearbyMarkersAndStations, lat, lng) {
                         url: url,
                         data: $(updatePricesForm).serialize(),
                         success: function (response) {
-                            console.log(response);
                             if (response === 'success') {
-                                alert('Successfully added price');
-                                $(updatePricesForm).addClass('hide');
+                                $(updatePricesForm).hide('slow');
                                 $(updatePricesForm).off();
                             } else if (response === 'failure') {
-                                alert('Error');
                             } else {
                                 alert('Unknown Error');
                             }
@@ -275,7 +272,6 @@ function findMarkerAndOpenPopup(nearbyMarkersAndStations, lat, lng) {
     }
 }
 
-
 async function updateMarkers(lat, lng, distance, nearbyMarkersAndStations, map) {
     let table = $('#stations-list');
     $(table).addClass('hide');
@@ -285,8 +281,10 @@ async function updateMarkers(lat, lng, distance, nearbyMarkersAndStations, map) 
 
     let url = 'http://localhost:8080/api/markers/get?lat=' + lat + '&lon=' + lng + '&distance=' + distance;
     // global variable
+    console.group('Load nearby stations');
     let nearbyStationsJSON = await fetchJSON(url);
     console.log(nearbyStationsJSON);
+    console.groupEnd();
 
     nearbyStationsJSON.forEach((item) => {
         if (item.prices.length > 0) {
@@ -373,7 +371,6 @@ function populateTable(table, data) {
                 diesel_set = true;
             }
         }
-        console.log(i);
         if (pb95_set && pb98_set && lpg_set && diesel_set) break;
     }
 

@@ -18,6 +18,10 @@ public class GlobalErrorHandlingController implements ErrorController {
 
     @RequestMapping(AuthenticationConstants.ERROR_PAGE_ENDPOINT)
     public String handleError(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        if(request.getAttribute("javax.servlet.forward.request_uri").equals("/login")) {
+            redirectAttributes.addAttribute("login", "true");
+            return "redirect:";
+        }
         return "error";
     }
 }
