@@ -3,7 +3,6 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibWp1ZG5hdXN6eSIsImEiOiJjazdyazV6am8wZHRhM2xwb
 var mymap = new mapboxgl.Map({
     interactive: true,
     trackResize: true,
-    zoomControl: false,
     pitchWithRotate: false,
     dragRotate: false,
     touchZoomRotate: false,
@@ -88,14 +87,7 @@ async function getRoute(end) {
                 'properties': {},
                 'geometry': {
                     'type': 'LineString',
-                    'coordinates': {
-                        'type': 'Feature',
-                        'properties': {},
-                        'geometry': {
-                            'type': 'LineString',
-                            'coordinates': route
-                        }
-                    }
+                    'coordinates': geojson
                 }
             }
         },
@@ -247,7 +239,7 @@ function findMarkerAndOpenPopup(nearbyMarkersAndStations, lat, lng) {
 
                 $(updatePricesForm).submit(function (event) {
                     event.preventDefault();
-                    let url = 'http://localhost:8080/api/prices/add?id=' + currentStation.id;
+                    let url = 'http://localhost:8080/api/prices/add?stationId=' + currentStation.id;
                     $.ajax({
                         type: "POST",
                         url: url,
@@ -295,7 +287,9 @@ async function updateMarkers(lat, lng, distance, nearbyMarkersAndStations, map) 
             }).setHTML(
                 item.name + '<br><small>' + item.street +
                 '</small><br>' +
-                '<span id="d0"><b>Directions</b></span> | <span id="p0"><b>Latest Prices</b></span> | <span id="a0"><b>Add Prices</b></span>'
+                '<span id="d0"><b>Directions</b></span> |' +
+                ' <span id="p0"><b>Latest Prices</b></span> | ' +
+                '<span id="a0"><b>Add Prices</b></span>'
             );
 
             let temp_marker = new mapboxgl.Marker({
@@ -398,7 +392,7 @@ mymap.on('load', function () {
         .addControl(navigation, 'top-left')
         .addControl(geocoder, 'top-left');
 });
-mymap.on('dragend', async function () {
+mymap.on('moveend', async function () {
     let origin = mymap.getCenter();
     clearMarkers(nearbyMarkersAndStations);
     await updateMarkers(origin.lat, origin.lng, myCircle.getRadius(), nearbyMarkersAndStations, mymap);

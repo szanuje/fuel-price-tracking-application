@@ -4,9 +4,10 @@ import com.licencjat.max.fuel.exceptions.EmptyPricesException;
 import com.licencjat.max.fuel.exceptions.StationAlreadyExistsException;
 import com.licencjat.max.fuel.exceptions.StationNotFoundException;
 import com.licencjat.max.fuel.exceptions.UserAlreadyExistsException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +28,7 @@ public class SpecifiedErrorHandlingController {
     }
 
     @ExceptionHandler({StationNotFoundException.class, EmptyPricesException.class})
-    @ResponseBody
-    public String failureResponseHandler() {
-        return "failure";
+    public ResponseEntity<String> failureResponseHandler() {
+        return new ResponseEntity<>("failure", HttpStatus.FORBIDDEN);
     }
 }

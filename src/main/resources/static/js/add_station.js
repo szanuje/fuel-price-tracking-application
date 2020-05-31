@@ -1,19 +1,14 @@
 async function getNominatimData(lat, lng) {
     return await fetchJSON(
-        'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng
+        'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' +
+        lat + '&lon=' + lng
     );
 }
 
 async function getOSMData(osm_type, osm_id) {
-    // return jQuery.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng)
-    //     .then(function (data) {
-    //         return jQuery.get('http://overpass-api.de/api/interpreter?data=[out:json];way(' + data.osm_id + ');out;')
-    //             .then(function (data2) {
-    //                 return data2;
-    //             });
-    //     });
     return await fetchJSON(
-        'http://overpass-api.de/api/interpreter?data=[out:json];' + osm_type + '(' + osm_id + ');out%20meta;'
+        'http://overpass-api.de/api/interpreter?data=[out:json];' +
+        osm_type + '(' + osm_id + ');out%20meta;'
     );
 }
 

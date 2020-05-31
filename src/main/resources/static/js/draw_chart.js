@@ -46,14 +46,15 @@ function generatePriceChart(station) {
         type: 'line',
         data: {
             labels: timestamps,
-            datasets: [{
-                label: 'PB 95',
-                data: pb95,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-                fill: false
-            },
+            datasets: [
+                {
+                    label: 'PB 95',
+                    data: pb95,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    fill: false
+                },
                 {
                     label: 'PB 98',
                     data: pb98,
@@ -93,7 +94,8 @@ function generatePriceChart(station) {
             title: {
                 display: true,
                 position: 'top',
-                text: [station.name + ', ' + station.street + ', ' + station.city, 'Latest prices']
+                text: [station.name + ', ' + station.street +
+                ', ' + station.city, 'Latest prices']
             },
             scales: {
                 xAxes: [{

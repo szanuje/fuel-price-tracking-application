@@ -27,7 +27,7 @@ public class StationController {
 
     @PostMapping(AuthenticationConstants.ADD_STATION_ENDPOINT)
     public String addStation(@ModelAttribute Station station) throws StationAlreadyExistsException {
-        if (stationManager.findByCityAndAndStreetAndAndPostalCode(
+        if (stationManager.findByCityAndStreetAndPostalCode(
                 station.getCity(), station.getStreet(), station.getPostalCode()).isEmpty()) {
             stationManager.save(station);
             return "add_station";

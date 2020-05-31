@@ -1,12 +1,10 @@
 package com.licencjat.max.fuel.security;
 
 import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
 public class AuthenticationConstants {
 
     public static final String MAIN_PAGE_ENDPOINT = "/";
@@ -21,13 +19,13 @@ public class AuthenticationConstants {
 
     public static final String GET_MARKERS_ENDPOINT = "/api/markers/get";
     public static final String ADD_PRICE_ENDPOINT = "/api/prices/add";
-    public static final String ALL_USERS_ENDPOINT = "api/users/all";
 
     public static final String CONSOLE_ENDPOINT = "/console/**";
 
-    private static final Pair<String, String> ADD_STATION_AUTHORITY = Pair.of("ACCESS_ADDSTATION", ADD_STATION_ENDPOINT);
-    private static final Pair<String, String> CONSOLE_ACCESS_AUTHORITY = Pair.of("ACCESS_CONSOLE", CONSOLE_ENDPOINT);
-    private static final Pair<String, String> ALL_USERS_ACCESS_AUTHORITY = Pair.of("ACCESS_USERS", ALL_USERS_ENDPOINT);
+    private static final Pair<String, String> ADD_STATION_AUTHORITY =
+            Pair.of("ACCESS_ADDSTATION", ADD_STATION_ENDPOINT);
+    private static final Pair<String, String> CONSOLE_ACCESS_AUTHORITY =
+            Pair.of("ACCESS_CONSOLE", CONSOLE_ENDPOINT);
 
     private static List<Pair<String, String>> userPairs() {
         return List.of(
@@ -38,8 +36,7 @@ public class AuthenticationConstants {
     private static List<Pair<String, String>> adminPairs() {
         return List.of(
                 ADD_STATION_AUTHORITY,
-                CONSOLE_ACCESS_AUTHORITY,
-                ALL_USERS_ACCESS_AUTHORITY
+                CONSOLE_ACCESS_AUTHORITY
         );
     }
 

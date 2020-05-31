@@ -29,17 +29,17 @@ public class PriceRestController {
     }
 
     @PostMapping
-    public String getAllPrices(
-            @RequestParam int id,
+    public String addPrices(
+            @RequestParam int stationId,
             @RequestParam(value = "pb95", defaultValue = "0") double pb95,
             @RequestParam(value = "pb98", defaultValue = "0") double pb98,
             @RequestParam(value = "lpg", defaultValue = "0") double lpg,
             @RequestParam(value = "diesel", defaultValue = "0") double diesel
     ) throws EmptyPricesException, StationNotFoundException {
-        System.out.println("id = " + id + ", pb95 = " + pb95 + ", pb98 = " + pb98 + ", lpg = " + lpg + ", diesel = " + diesel);
         if (Stream.of(pb95, pb98, lpg, diesel).allMatch(x -> x == 0.0))
             throw new EmptyPricesException("All prices are blank");
-        Station station = stationManager.findById((long) id).orElseThrow(() -> new StationNotFoundException(id));
+        Station station = stationManager.findById(
+                (long) stationId).orElseThrow(() -> new StationNotFoundException(stationId));
 
         Price price = new Price();
         price.setTimestamp(new Timestamp(new Date().getTime()).toString());

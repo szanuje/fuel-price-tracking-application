@@ -36,8 +36,8 @@ public class StationManager {
         stationRepository.deleteAll();
     }
 
-    public Optional<Station> findByCityAndAndStreetAndAndPostalCode(String city, String street, String postalcode) {
-        return stationRepository.findByCityAndAndStreetAndAndPostalCode(city, street, postalcode);
+    public Optional<Station> findByCityAndStreetAndPostalCode(String city, String street, String postalCode) {
+        return stationRepository.findByCityAndStreetAndPostalCode(city, street, postalCode);
     }
 
 }
