@@ -239,7 +239,7 @@ function findMarkerAndOpenPopup(nearbyMarkersAndStations, lat, lng) {
 
                 $(updatePricesForm).submit(function (event) {
                     event.preventDefault();
-                    let url = 'http://localhost:8080/api/prices/add?stationId=' + currentStation.id;
+                    let url = window.location.href + 'api/prices/add?stationId=' + currentStation.id;
                     $.ajax({
                         type: "POST",
                         url: url,
@@ -271,7 +271,7 @@ async function updateMarkers(lat, lng, distance, nearbyMarkersAndStations, map) 
     let isTableEmpty = true;
 
 
-    let url = 'http://localhost:8080/api/markers/get?lat=' + lat + '&lon=' + lng + '&distance=' + distance;
+    let url = window.location.href + 'api/markers/get?lat=' + lat + '&lon=' + lng + '&distance=' + distance;
     // global variable
     console.group('Load nearby stations');
     let nearbyStationsJSON = await fetchJSON(url);
